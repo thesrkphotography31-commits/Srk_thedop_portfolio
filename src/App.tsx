@@ -436,6 +436,21 @@ const CREATOR_ROUTE = (() => {
   );
 })();
 
+
+// PUBLIC/CREATOR SEPARATION
+// Public visitors ALWAYS use canonical repository content.
+// Browser persistence is only allowed when explicitly entering creator mode.
+const EXPLICIT_CREATOR_MODE =
+  typeof window !== 'undefined' &&
+  (() => {
+    const params = new URLSearchParams(window.location.search);
+    return (
+      params.get('creator') === 'true' ||
+      params.get('creator') === '1' ||
+      params.get('admin') === 'true'
+    );
+  })();
+
 export default function App() {
   const [activeCategory, setActiveCategory] = useState<'video' | 'photo'>(() => {
     if (typeof window !== 'undefined') {
@@ -653,7 +668,7 @@ export default function App() {
       }
     };
     runAutoSync();
-  }, []);
+  }, [isCreator]);
 
   const heroObjectPositionClass = useMemo(() => {
     switch (heroMobileFocus) {

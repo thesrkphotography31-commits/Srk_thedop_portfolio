@@ -399,6 +399,8 @@ export interface PhotoCatalogProps {
 
 export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalogProps) {
   const [photos, setPhotos] = useState<CatalogPhoto[]>(() => {
+    // PUBLIC MODE: canonical portfolioContent.json only.
+    // CREATOR MODE: browser-persisted edits are allowed.
     if (isCreator && typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('srk_portfolio_catalog_photos');
@@ -406,12 +408,6 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
             const sanitized = sanitizePhotos(parsed);
-            if (sanitized.length !== parsed.length) {
-              try {
-                localStorage.setItem('srk_portfolio_catalog_photos', JSON.stringify(sanitized));
-                localStorage.setItem('srk_custom_photos_count', sanitized.length.toString());
-              } catch {}
-            }
             if (sanitized.length > 0) return sanitized;
           }
         }
@@ -419,18 +415,16 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
     }
     return CATALOG_PHOTOS;
   });
-
   const [failedPhotoIds, setFailedPhotoIds] = useState<Set<string>>(new Set());
 
   const [isCustomList, setIsCustomList] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
+    if (isCreator && typeof window !== 'undefined') {
       try {
         return localStorage.getItem('srk_has_custom_photos') === 'true';
       } catch {}
     }
     return false;
   });
-
   // Adjustable layout states
   const [portraitColumns, setPortraitColumns] = useState<PortraitColumns>(2);
   const [fitMode, setFitMode] = useState<FitMode>('fill');
@@ -485,7 +479,7 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
     return () => {
       active = false;
     };
-  }, []);
+  }, [isCreator]);
 
   // Monitor scroll position
   useEffect(() => {
