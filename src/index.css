@@ -1,0 +1,167 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Matte light gold yellow palette (luxurious, understated, low-glare) */
+    --gold-primary: #e6ca85;
+    --gold-light: #f3dfaa;
+    --gold-dim: #c8a860;
+    --gold-surface: #1e1b14;
+    --gold-border: rgba(230, 202, 133, 0.25);
+    --gold-glow: rgba(230, 202, 133, 0.12);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0d0c0a;
+    color: #f2ede4;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: rgba(230, 202, 133, 0.25);
+    color: #f5eedf;
+  }
+}
+
+.font-serif-garamond {
+  font-family: 'EB Garamond', Georgia, serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+/* Matte Gold Utility Classes */
+.text-gold-matte {
+  color: #e6ca85;
+}
+
+.text-gold-light {
+  color: #f3dfaa;
+}
+
+.text-gold-dim {
+  color: #bda262;
+}
+
+.bg-gold-matte {
+  background-color: #e6ca85;
+}
+
+.bg-gold-surface {
+  background-color: #1a1712;
+}
+
+.border-gold-matte {
+  border-color: rgba(230, 202, 133, 0.3);
+}
+
+.border-gold-subtle {
+  border-color: rgba(230, 202, 133, 0.15);
+}
+
+/* Matte Gold Trial Active Styles */
+.theme-matte-gold [class*="text-amber-"],
+.theme-matte-gold [class*="text-amber-300"],
+.theme-matte-gold [class*="text-amber-400"],
+.theme-matte-gold [class*="text-amber-500"] {
+  color: #eed59a !important;
+}
+
+.theme-matte-gold [class*="bg-amber-400"] {
+  background-color: #e6ca85 !important;
+}
+
+.theme-matte-gold [class*="bg-amber-400/10"],
+.theme-matte-gold [class*="bg-amber-400/15"],
+.theme-matte-gold [class*="bg-amber-400/20"],
+.theme-matte-gold [class*="bg-amber-400/25"],
+.theme-matte-gold [class*="bg-amber-400/30"] {
+  background-color: rgba(230, 202, 133, 0.16) !important;
+}
+
+.theme-matte-gold [class*="border-amber-400"] {
+  border-color: rgba(230, 202, 133, 0.35) !important;
+}
+
+.theme-matte-gold [class*="shadow-amber-400"] {
+  box-shadow: 0 4px 14px rgba(230, 202, 133, 0.22) !important;
+}
+
+.theme-matte-gold [class*="from-amber-400"] {
+  background-image: linear-gradient(to right, #cfab63, #edd499, #cfab63) !important;
+  color: #14110a !important;
+}
+
+/* Subtle Matte Gold Tint across Key Hero & Navigation Accents */
+.theme-matte-gold #nav-brand span:first-child {
+  color: #f3dfaa !important;
+}
+
+.theme-matte-gold #nav-brand span:last-child {
+  color: #e6ca85 !important;
+}
+
+.theme-matte-gold #nav-inquire-btn {
+  border-color: rgba(230, 202, 133, 0.45) !important;
+  color: #f3dfaa !important;
+}
+
+.theme-matte-gold #hero-explore-work-btn {
+  background-color: #e6ca85 !important;
+  color: #14110b !important;
+}
+
+.theme-matte-gold #hero-explore-work-btn:hover {
+  background-color: #f3dfaa !important;
+}
+
+.theme-matte-gold #hero-inquire-btn {
+  border-color: rgba(230, 202, 133, 0.45) !important;
+  color: #f3dfaa !important;
+}
+
+.theme-matte-gold #hero-inquire-btn:hover {
+  background-color: rgba(230, 202, 133, 0.12) !important;
+}
+
+.theme-matte-gold #cat-btn-videography.after\:bg-\[\#f0ede8\]\/60::after,
+.theme-matte-gold #cat-btn-photography.after\:bg-\[\#f0ede8\]\/60::after {
+  background-color: #e6ca85 !important;
+}
+
+.theme-matte-gold #open-custom-brief-btn {
+  border-color: rgba(230, 202, 133, 0.45) !important;
+  color: #f3dfaa !important;
+}
+
+.theme-matte-gold #open-custom-brief-btn:hover {
+  background-color: rgba(230, 202, 133, 0.12) !important;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 50s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

@@ -1,0 +1,359 @@
+{
+  "hero": "/sriram-hero.jpg",
+  "heroFocus": "face",
+  "portrait": "/sriram-portrait.jpg",
+  "about": {
+    "headline": "I tell stories through light, movement and real moments.",
+    "subtitle": "DOP / VIDEOGRAPHER / PHOTOGRAPHER",
+    "paragraphs": [
+      "I'm a cinematographer, videographer and photographer with over 7 years of experience crafting visuals for brands, artists and businesses. I work across commercials, brand films, product videos, live events and personal projects — always with a focus on strong visual storytelling and intentional, cinematic imagery.",
+      "From the first idea to the final frame, I bring a collaborative and detail-oriented approach to every project. Whether it's a high-energy commercial, a documentary-style film or a simple product shoot, my goal is the same — to create visuals that feel authentic, memorable and aligned with your story.",
+      "I'm comfortable working across different scales — from independent projects to large-scale productions — and I adapt to the needs of each project, bringing a mix of technical expertise, creative instinct and reliability on set.",
+      "If you're looking for a DOP, videographer or photographer who can understand your vision and bring it to life with a cinematic, honest and compelling visual language, let's create something together."
+    ],
+    "stats": [
+      {
+        "value": "7+",
+        "label": "Years of Experience"
+      },
+      {
+        "value": "40+",
+        "label": "Brands Worked With"
+      },
+      {
+        "value": "100+",
+        "label": "Clients Worldwide"
+      }
+    ],
+    "tools": [
+      "ARRI Alexa Mini LF",
+      "Sony FX3 / FX6 / FX9",
+      "Event DOP",
+      "Production",
+      "Gimbal Operator",
+      "DaVinci Resolve Grading",
+      "Pre-Production"
+    ]
+  },
+  "photos": [
+    {
+      "id": "photo-import-1788974907125-0-wqjlp",
+      "imageUrl": "/photos/photo-import-1788974907125-0-wqjlp.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1707,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788974907657-1-vnrai",
+      "imageUrl": "/photos/photo-import-1788974907657-1-vnrai.jpg",
+      "aspect": "2/3",
+      "width": 1707,
+      "height": 2560,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788974821098-0-z94rf",
+      "imageUrl": "/photos/photo-import-1788974821098-0-z94rf.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1707,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788974821832-1-a0qg1",
+      "imageUrl": "/photos/photo-import-1788974821832-1-a0qg1.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1707,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788974775426-0-3relf",
+      "imageUrl": "/photos/photo-import-1788974775426-0-3relf.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1710,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788974755331-0-a4ap5",
+      "imageUrl": "/photos/photo-import-1788974755331-0-a4ap5.jpg",
+      "aspect": "2/3",
+      "width": 1707,
+      "height": 2560,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935845292-0-2v4ka",
+      "imageUrl": "/photos/photo-import-1788935845292-0-2v4ka.jpg",
+      "aspect": "3/4",
+      "width": 1240,
+      "height": 1550,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935845405-1-le0jb",
+      "imageUrl": "/photos/photo-import-1788935845405-1-le0jb.jpg",
+      "aspect": "4/3",
+      "width": 1400,
+      "height": 1066,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935845539-2-782fz",
+      "imageUrl": "/photos/photo-import-1788935845539-2-782fz.jpg",
+      "aspect": "2/3",
+      "width": 1068,
+      "height": 1600,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935845831-3-5gbdy",
+      "imageUrl": "/photos/photo-import-1788935845831-3-5gbdy.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1706,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935846302-4-vuzkg",
+      "imageUrl": "/photos/photo-import-1788935846302-4-vuzkg.jpg",
+      "aspect": "2/3",
+      "width": 1440,
+      "height": 2560,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935847077-5-0pj64",
+      "imageUrl": "/photos/photo-import-1788935847077-5-0pj64.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1707,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935847200-6-q76ej",
+      "imageUrl": "/photos/photo-import-1788935847200-6-q76ej.jpg",
+      "aspect": "3/2",
+      "width": 1400,
+      "height": 934,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935847861-7-r37hh",
+      "imageUrl": "/photos/photo-import-1788935847861-7-r37hh.jpg",
+      "aspect": "3/4",
+      "width": 2048,
+      "height": 2560,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935848566-8-nw758",
+      "imageUrl": "/photos/photo-import-1788935848566-8-nw758.jpg",
+      "aspect": "2/3",
+      "width": 1707,
+      "height": 2560,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935849654-9-wm1np",
+      "imageUrl": "/photos/photo-import-1788935849654-9-wm1np.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1707,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935850473-10-folm4",
+      "imageUrl": "/photos/photo-import-1788935850473-10-folm4.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1707,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935851343-11-uznw3",
+      "imageUrl": "/photos/photo-import-1788935851343-11-uznw3.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1707,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935851495-12-h98b7",
+      "imageUrl": "/photos/photo-import-1788935851495-12-h98b7.jpg",
+      "aspect": "3/4",
+      "width": 1240,
+      "height": 1550,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935852041-13-39vin",
+      "imageUrl": "/photos/photo-import-1788935852041-13-39vin.jpg",
+      "aspect": "4/3",
+      "width": 2560,
+      "height": 2048,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935852564-14-qyid1",
+      "imageUrl": "/photos/photo-import-1788935852564-14-qyid1.jpg",
+      "aspect": "4/3",
+      "width": 2560,
+      "height": 2048,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935853108-15-eg552",
+      "imageUrl": "/photos/photo-import-1788935853108-15-eg552.jpg",
+      "aspect": "4/3",
+      "width": 2560,
+      "height": 2048,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935853611-16-t77p7",
+      "imageUrl": "/photos/photo-import-1788935853611-16-t77p7.jpg",
+      "aspect": "4/3",
+      "width": 2560,
+      "height": 2048,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935854237-17-5t04u",
+      "imageUrl": "/photos/photo-import-1788935854237-17-5t04u.jpg",
+      "aspect": "4/3",
+      "width": 2560,
+      "height": 2048,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935854738-18-yhms8",
+      "imageUrl": "/photos/photo-import-1788935854738-18-yhms8.jpg",
+      "aspect": "2/3",
+      "width": 1707,
+      "height": 2560,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935855321-19-1y1do",
+      "imageUrl": "/photos/photo-import-1788935855321-19-1y1do.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1707,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935855843-20-l0m0b",
+      "imageUrl": "/photos/photo-import-1788935855843-20-l0m0b.jpg",
+      "aspect": "3/2",
+      "width": 2560,
+      "height": 1707,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935855943-21-2d6fn",
+      "imageUrl": "/photos/photo-import-1788935855943-21-2d6fn.jpg",
+      "aspect": "1/1",
+      "width": 1080,
+      "height": 1080,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    },
+    {
+      "id": "photo-import-1788935856269-22-abp24",
+      "imageUrl": "/photos/photo-import-1788935856269-22-abp24.jpg",
+      "aspect": "2/3",
+      "width": 1440,
+      "height": 2560,
+      "mood": "golden-hour",
+      "colorSpace": "warm-gold",
+      "category": "editorial-portrait",
+      "dominantColor": "#9e8574"
+    }
+  ]
+}
