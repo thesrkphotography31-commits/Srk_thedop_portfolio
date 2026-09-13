@@ -399,7 +399,7 @@ export interface PhotoCatalogProps {
 
 export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalogProps) {
   const [photos, setPhotos] = useState<CatalogPhoto[]>(() => {
-    if (typeof window !== 'undefined') {
+    if (isCreator && typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('srk_portfolio_catalog_photos');
         if (saved) {
@@ -457,6 +457,7 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
 
   // Load photos asynchronously from storage
   useEffect(() => {
+    if (!isCreator) return;
     let active = true;
     loadPhotosFromStorage().then((stored) => {
       if (!active) return;
