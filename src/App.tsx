@@ -424,33 +424,6 @@ const CANDIDATE_PORTRAITS = [
   defaultPortfolioContent.portrait || "/sriram-portrait.jpg"
 ];
 
-// PUBLIC SITE MUST ALWAYS USE CANONICAL PROJECT CONTENT.
-// Browser persistence is allowed only in explicit creator/admin sessions.
-const CREATOR_ROUTE = (() => {
-  if (typeof window === 'undefined') return false;
-  const params = new URLSearchParams(window.location.search);
-  return (
-    params.get('creator') === 'true' ||
-    params.get('creator') === '1' ||
-    params.get('admin') === 'true'
-  );
-})();
-
-
-// PUBLIC/CREATOR SEPARATION
-// Public visitors ALWAYS use canonical repository content.
-// Browser persistence is only allowed when explicitly entering creator mode.
-const EXPLICIT_CREATOR_MODE =
-  typeof window !== 'undefined' &&
-  (() => {
-    const params = new URLSearchParams(window.location.search);
-    return (
-      params.get('creator') === 'true' ||
-      params.get('creator') === '1' ||
-      params.get('admin') === 'true'
-    );
-  })();
-
 export default function App() {
   const [activeCategory, setActiveCategory] = useState<'video' | 'photo'>(() => {
     if (typeof window !== 'undefined') {
@@ -506,12 +479,10 @@ export default function App() {
   });
 
   const [customPortrait, setCustomPortrait] = useState<string | null>(() => {
-    if (CREATOR_ROUTE) {
-      try {
-        const saved = localStorage.getItem('srk_portfolio_portrait');
-        if (saved) return saved;
-      } catch {}
-    }
+    try {
+      const saved = localStorage.getItem('srk_portfolio_portrait');
+      if (saved) return saved;
+    } catch {}
     return defaultPortfolioContent.portrait || null;
   });
   const [portraitCandidateIndex, setPortraitCandidateIndex] = useState(0);
@@ -521,7 +492,6 @@ export default function App() {
 
   // Restore persistent profile photo across Server API, IndexedDB, and LocalStorage
   useEffect(() => {
-    if (!CREATOR_ROUTE) return;
     let active = true;
     loadProfilePhotoFromStorage().then((saved) => {
       if (!active) return;
@@ -537,12 +507,10 @@ export default function App() {
   }, []);
 
   const [customHero, setCustomHero] = useState<string | null>(() => {
-    if (CREATOR_ROUTE) {
-      try {
-        const saved = localStorage.getItem('srk_portfolio_hero');
-        if (saved) return saved;
-      } catch {}
-    }
+    try {
+      const saved = localStorage.getItem('srk_portfolio_hero');
+      if (saved) return saved;
+    } catch {}
     return defaultPortfolioContent.hero || null;
   });
   const [heroCandidateIndex, setHeroCandidateIndex] = useState(0);
@@ -551,12 +519,10 @@ export default function App() {
   const heroFileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const [heroMobileFocus, setHeroMobileFocus] = useState<'face' | 'cinematic' | 'center'>(() => {
-    if (CREATOR_ROUTE) {
-      try {
-        const saved = localStorage.getItem('srk_portfolio_hero_focus');
-        if (saved === 'face' || saved === 'cinematic' || saved === 'center') return saved;
-      } catch {}
-    }
+    try {
+      const saved = localStorage.getItem('srk_portfolio_hero_focus');
+      if (saved === 'face' || saved === 'cinematic' || saved === 'center') return saved;
+    } catch {}
     return (defaultPortfolioContent.heroFocus as any) || 'face';
   });
 
@@ -570,12 +536,10 @@ export default function App() {
 
   // About Me Editable State
   const [aboutData, setAboutData] = useState(() => {
-    if (CREATOR_ROUTE) {
-      try {
-        const saved = localStorage.getItem('srk_portfolio_about');
-        if (saved) return JSON.parse(saved);
-      } catch {}
-    }
+    try {
+      const saved = localStorage.getItem('srk_portfolio_about');
+      if (saved) return JSON.parse(saved);
+    } catch {}
     return defaultPortfolioContent.about;
   });
   const [isEditingAbout, setIsEditingAbout] = useState(false);
@@ -623,7 +587,6 @@ export default function App() {
 
   // Auto-sync on startup so any edits in browser are immediately written to files
   useEffect(() => {
-    if (!CREATOR_ROUTE) return;
     const runAutoSync = async () => {
       try {
         const localPhotosRaw = localStorage.getItem('srk_portfolio_catalog_photos');
@@ -668,7 +631,7 @@ export default function App() {
       }
     };
     runAutoSync();
-  }, [isCreator]);
+  }, []);
 
   const heroObjectPositionClass = useMemo(() => {
     switch (heroMobileFocus) {
@@ -794,8 +757,11 @@ export default function App() {
       if (params.get('visitor') === 'true' || params.get('client') === 'true' || params.get('public') === 'true') {
         return false;
       }
-      // Creator mode is explicit only.
-      // Public visitors never inherit an old browser creator flag.
+      try {
+        const stored = localStorage.getItem('srk_creator_active');
+        if (stored === 'true') return true;
+        if (stored === 'false') return false;
+      } catch {}
     }
     return false;
   });
