@@ -1,4 +1,4 @@
-import { CatalogPhoto, determineAspectRatio } from '../components/PhotoCatalog';
+import type { CatalogPhoto } from '../components/PhotoCatalog';
 import { analyzeCanvasPixels } from './photoAnalysis';
 
 const DB_NAME = 'srk_photography_portfolio_db';

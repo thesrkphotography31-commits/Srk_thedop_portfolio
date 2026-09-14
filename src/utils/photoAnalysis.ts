@@ -1,4 +1,4 @@
-import { CatalogPhoto } from '../components/PhotoCatalog';
+import type { CatalogPhoto } from '../components/PhotoCatalog';
 
 export type PhotoMood = 
   | 'cinematic-noir' 
