@@ -1626,7 +1626,7 @@ export default function App() {
                 </h3>
               </div>
               <div className="flex items-center gap-2">
-                {selectedVideoModal.videoUrl && (
+                {selectedVideoModal.allowsEmbed === false && selectedVideoModal.videoUrl && (
                   <a
                     href={selectedVideoModal.videoUrl}
                     target="_blank"
@@ -1634,7 +1634,7 @@ export default function App() {
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-amber-400/15 hover:bg-amber-400 text-amber-300 hover:text-black font-semibold text-[10px] uppercase font-mono tracking-wider transition-colors border border-amber-400/30"
                     title="Open external film link in a new tab"
                   >
-                    <span>Watch Film</span>
+                    <span>Watch External</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 )}

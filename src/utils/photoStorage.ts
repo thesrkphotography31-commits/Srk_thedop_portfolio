@@ -48,6 +48,8 @@ export function sanitizePhotos(list: CatalogPhoto[]): CatalogPhoto[] {
       p.imageUrl.trim().length > 0 &&
       !p.imageUrl.includes('unsplash.com') &&
       !p.imageUrl.includes('photo-1608248597359-0a56e09307d8') &&
+      !p.imageUrl.toLowerCase().includes('vir-8') &&
+      !p.id?.toLowerCase().includes('vir-8') &&
       !p.id?.startsWith('catalog-') &&
       !p.id?.startsWith('sample-') &&
       !p.id?.startsWith('demo-') &&
@@ -438,6 +440,19 @@ export async function clearProfilePhotoFromStorage(): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+function determineAspectRatio(width: number, height: number): CatalogPhoto['aspect'] {
+  const ratio = width / height;
+  if (ratio >= 2.05) return '21/9';
+  if (ratio >= 1.55) return '16/9';
+  if (ratio >= 1.35) return '3/2';
+  if (ratio >= 1.12) return '4/3';
+  if (ratio >= 0.90) return '1/1';
+  if (ratio >= 0.78) return '4/5';
+  if (ratio >= 0.70) return '3/4';
+  if (ratio >= 0.60) return '2/3';
+  return '9/16';
 }
 
 /**

@@ -212,6 +212,7 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
 
   // Helper to get poster image
   const getPosterUrl = (video: VideoProject) => {
+    if (video.id === 'virdas-tour') return '/Vir-8.JPEG';
     if (video.thumbnail) return video.thumbnail;
     if (video.imageUrl) return video.imageUrl;
     if (video.youtubeId) {
@@ -543,10 +544,14 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
             : 'aspect-video';
 
           const handleCardClick = () => {
-            onSelectVideo({
-              ...video,
-              videoSrc: activeVideoSrc
-            });
+            if (canEmbed) {
+              setInlinePlayingId(video.id);
+            } else {
+              onSelectVideo({
+                ...video,
+                videoSrc: activeVideoSrc
+              });
+            }
           };
 
           return (
@@ -578,24 +583,58 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
 
                 {/* Direct Video Embed (HTML5 video for videoSrc, or YouTube iframe) */}
                 {isDirect ? (
-                  hasVideoSrc ? (
-                    <video
-                      src={activeVideoSrc}
-                      controls
-                      playsInline
-                      autoPlay={inlinePlayingId === video.id}
-                      poster={getPosterUrl(video)}
-                      className="absolute inset-0 w-full h-full object-cover z-10 bg-black"
-                    />
-                  ) : video.youtubeId ? (
-                    <iframe
-                      src={`https://www.youtube.com/embed/${video.youtubeId}?rel=0&modestbranding=1&color=white${inlinePlayingId === video.id ? '&autoplay=1' : ''}`}
-                      className="absolute inset-0 w-full h-full border-none z-10"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      title={`${video.title} — Sriram Karthick`}
-                    />
-                  ) : null
+                  <div className="relative w-full h-full bg-black">
+                    {hasVideoSrc ? (
+                      <video
+                        src={activeVideoSrc}
+                        controls
+                        playsInline
+                        autoPlay={inlinePlayingId === video.id}
+                        poster={getPosterUrl(video)}
+                        className="absolute inset-0 w-full h-full object-cover z-10 bg-black"
+                      />
+                    ) : video.youtubeId ? (
+                      <iframe
+                        src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&rel=0&modestbranding=1&color=white`}
+                        className="absolute inset-0 w-full h-full border-none z-10"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        title={`${video.title} — Sriram Karthick`}
+                      />
+                    ) : null}
+
+                    {/* Quick controls when playing inline */}
+                    {inlinePlayingId === video.id && (
+                      <div className="absolute top-3 right-3 z-30 flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSelectVideo({
+                              ...video,
+                              videoSrc: activeVideoSrc
+                            });
+                          }}
+                          className="px-2.5 py-1 rounded bg-black/80 hover:bg-amber-400 hover:text-black text-white/90 border border-white/20 hover:border-amber-400 text-[10px] font-mono tracking-wider backdrop-blur-md transition-colors cursor-pointer flex items-center gap-1 shadow-lg"
+                          title="Expand into theater modal"
+                        >
+                          <Maximize2 className="w-3 h-3" />
+                          <span>Expand</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setInlinePlayingId(null);
+                          }}
+                          className="px-2.5 py-1 rounded bg-black/80 hover:bg-white hover:text-black text-white/90 border border-white/20 text-[10px] font-mono tracking-wider backdrop-blur-md transition-colors cursor-pointer shadow-lg"
+                          title="Close player & restore poster"
+                        >
+                          ✕ Close
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   /* Video Poster Card */
                   <div
@@ -609,7 +648,7 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                       }
                     }}
                     className="relative block w-full h-full cursor-pointer overflow-hidden z-10 group/poster"
-                    title={`Watch ${video.title}`}
+                    title={`Play ${video.title}`}
                   >
                     <img
                       src={getPosterUrl(video)}
@@ -618,8 +657,12 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                       loading="lazy"
                       onError={(e) => {
                         const target = e.currentTarget;
-                        if (target.src.endsWith('/Vir-8.JPEG') || target.src.endsWith('/vir-8.jpeg')) {
-                          target.src = '/virdas-poster.jpg';
+                        if (video.id === 'virdas-tour') {
+                          if (!target.src.endsWith('/Vir-8.JPEG') && !target.src.endsWith('/vir-8.jpeg')) {
+                            target.src = '/Vir-8.JPEG';
+                          } else {
+                            target.src = '/virdas-poster.jpg';
+                          }
                         } else if (FALLBACK_POSTERS[video.id] && !target.src.includes(FALLBACK_POSTERS[video.id])) {
                           target.src = FALLBACK_POSTERS[video.id];
                         } else if (video.youtubeId && !target.src.includes('sddefault') && !target.src.includes('hqdefault')) {
@@ -633,32 +676,37 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none transition-opacity duration-300 group-hover/poster:opacity-60" />
 
-                    {/* Center Play Icon Glow Trigger */}
-                    <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-black/60 backdrop-blur-md border border-white/25 flex items-center justify-center text-white group-hover/poster:scale-110 group-hover/poster:bg-amber-400 group-hover/poster:text-black group-hover/poster:border-amber-400 transition-all duration-300 shadow-2xl">
+                    {/* Center Play Icon Trigger */}
+                    <div className="absolute inset-0 flex items-center justify-center z-20">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (canEmbed) {
+                            setInlinePlayingId(video.id);
+                          } else {
+                            handleCardClick();
+                          }
+                        }}
+                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-black/60 backdrop-blur-md border border-white/25 flex items-center justify-center text-white hover:scale-110 group-hover/poster:scale-110 hover:bg-amber-400 group-hover/poster:bg-amber-400 hover:text-black group-hover/poster:text-black hover:border-amber-400 group-hover/poster:border-amber-400 transition-all duration-300 shadow-2xl cursor-pointer"
+                        title={`Play ${video.title}`}
+                        aria-label={`Play ${video.title}`}
+                      >
                         <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-current ml-0.5" />
-                      </div>
+                      </button>
                     </div>
 
                     {/* Subtle Action indicator on hover */}
-                    {hasExternalUrl ? (
-                      <a
-                        href={externalUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="absolute bottom-3 right-3 z-20 opacity-0 group-hover/poster:opacity-100 transition-opacity duration-300 flex items-center gap-1.5 px-3 py-1.5 bg-black/90 backdrop-blur-md rounded-full border border-white/25 text-[9px] uppercase tracking-widest text-amber-300 font-mono shadow-lg hover:bg-amber-400 hover:text-black"
-                        title="Open external film link in a new tab"
-                      >
-                        <span>Watch External</span>
-                        <ExternalLink className="w-2.5 h-2.5" />
-                      </a>
-                    ) : (
-                      <div className="absolute bottom-3 right-3 z-20 opacity-0 group-hover/poster:opacity-100 transition-opacity duration-300 flex items-center gap-1.5 px-3 py-1.5 bg-black/90 backdrop-blur-md rounded-full border border-white/25 text-[9px] uppercase tracking-widest text-amber-300 font-mono shadow-lg">
-                        <span>Screen Film</span>
-                        <Maximize2 className="w-2.5 h-2.5" />
-                      </div>
-                    )}
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCardClick();
+                      }}
+                      className="absolute bottom-3 right-3 z-20 opacity-0 group-hover/poster:opacity-100 transition-opacity duration-300 flex items-center gap-1.5 px-3 py-1.5 bg-black/90 backdrop-blur-md rounded-full border border-white/25 text-[9px] uppercase tracking-widest text-amber-300 font-mono shadow-lg hover:bg-amber-400 hover:text-black cursor-pointer"
+                    >
+                      <span>Play Film</span>
+                      <Play className="w-2.5 h-2.5 fill-current" />
+                    </div>
 
                     {/* Creator Mode Attach Video Trigger */}
                     {isCreator && (
@@ -682,45 +730,28 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
               {/* Title Strip */}
               <div className="p-4 sm:p-5 md:p-6 bg-[#0a0a0a] flex items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  {hasExternalUrl ? (
-                    <a
-                      href={externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/title inline-flex items-center gap-2 text-[#f0ede8] hover:text-amber-300 transition-colors"
-                      title={`Watch ${video.title} in a new tab`}
-                    >
-                      <h3 className="font-serif-garamond text-2xl sm:text-3xl font-normal leading-tight group-hover/title:text-amber-300 transition-colors">
-                        {video.title} {video.highlight && <span className="italic">{video.highlight}</span>}
-                      </h3>
-                      <ExternalLink className="w-3.5 h-3.5 text-white/30 group-hover/title:text-amber-300 transition-colors shrink-0" />
-                    </a>
-                  ) : (
-                    <button
-                      onClick={handleCardClick}
-                      className="text-left group/title inline-flex items-center gap-2 text-[#f0ede8] hover:text-amber-300 transition-colors cursor-pointer"
-                    >
-                      <h3 className="font-serif-garamond text-2xl sm:text-3xl font-normal leading-tight group-hover/title:text-amber-300 transition-colors">
-                        {video.title} {video.highlight && <span className="italic">{video.highlight}</span>}
-                      </h3>
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={handleCardClick}
+                    className="text-left group/title inline-flex items-center gap-2 text-[#f0ede8] hover:text-amber-300 transition-colors cursor-pointer"
+                  >
+                    <h3 className="font-serif-garamond text-2xl sm:text-3xl font-normal leading-tight group-hover/title:text-amber-300 transition-colors">
+                      {video.title} {video.highlight && <span className="italic">{video.highlight}</span>}
+                    </h3>
+                  </button>
                 </div>
 
-                {hasExternalUrl && (
-                  <div className="flex items-center gap-2 shrink-0">
-                    <a
-                      href={externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-white/[0.03] hover:bg-amber-400/20 text-white/60 hover:text-amber-300 border border-white/[0.08] hover:border-amber-400/30 text-[10px] uppercase font-mono tracking-wider transition-colors"
-                      title="Watch film in a new tab"
-                    >
-                      <span className="hidden sm:inline">Watch</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                )}
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={handleCardClick}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-white/[0.03] hover:bg-amber-400/20 text-white/60 hover:text-amber-300 border border-white/[0.08] hover:border-amber-400/30 text-[10px] uppercase font-mono tracking-wider transition-colors cursor-pointer"
+                    title={`Play ${video.title}`}
+                  >
+                    <Play className="w-3 h-3 fill-current" />
+                    <span className="hidden sm:inline">Play</span>
+                  </button>
+                </div>
               </div>
             </div>
           );
