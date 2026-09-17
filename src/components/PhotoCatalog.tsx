@@ -120,7 +120,7 @@ type PortraitColumns = 2 | 3 | 4;
 type FitMode = 'fill' | 'contain';
 type FlowStyle = 'rhythmic' | 'widescreen';
 export type AspectFilter = 'all' | '16/9' | '9/16' | '2/3' | '3/4';
-export type SortMode = 'stylized-shuffle' | 'neat-aspect' | 'newest' | 'rhythmic';
+export type SortMode = 'curated' | 'stylized-shuffle' | 'neat-aspect' | 'newest' | 'rhythmic';
 export type MoodFilter = 'all' | PhotoMood;
 export type ColorSpaceFilter = 'all' | PhotoColorSpace;
 export type CategoryFilter = 'all' | PhotoCategory;
@@ -148,8 +148,8 @@ const DEFAULT_PHOTO_SETTINGS: SavedPhotographySettings = {
   flowStyle: 'rhythmic',
   zoomMode: 'parallax',
   aspectFilter: 'all',
-  sortMode: 'stylized-shuffle',
-  shuffleSeed: 101, // Deterministic stable seed ensuring no random jumbling across refreshes
+  sortMode: 'curated', // Strictly preserved curated order by default: do not change photography arrangement
+  shuffleSeed: 101, // Deterministic stable seed
   activeFilterTab: 'mood',
   moodFilter: 'all',
   colorFilter: 'all',
@@ -184,9 +184,15 @@ function loadSavedPhotographySettings(): SavedPhotographySettings {
       ? parsed.aspectFilter
       : DEFAULT_PHOTO_SETTINGS.aspectFilter;
 
-    const sortMode: SortMode = (['stylized-shuffle', 'neat-aspect', 'newest', 'rhythmic'] as string[]).includes(parsed.sortMode)
-      ? parsed.sortMode
-      : DEFAULT_PHOTO_SETTINGS.sortMode;
+    // Guarantee default is curated order; if old cache held 'stylized-shuffle', migrate to 'curated'
+    let sortMode: SortMode = DEFAULT_PHOTO_SETTINGS.sortMode;
+    if (parsed.sortMode && ['curated', 'stylized-shuffle', 'neat-aspect', 'newest', 'rhythmic'].includes(parsed.sortMode)) {
+      if (parsed.sortMode === 'stylized-shuffle') {
+        sortMode = 'curated';
+      } else {
+        sortMode = parsed.sortMode;
+      }
+    }
 
     const shuffleSeed: number = (typeof parsed.shuffleSeed === 'number' && !isNaN(parsed.shuffleSeed))
       ? parsed.shuffleSeed
@@ -246,7 +252,7 @@ function buildAdjustableLayout(
   photoList: CatalogPhoto[],
   portraitColumns: PortraitColumns,
   flowStyle: FlowStyle,
-  sortMode: SortMode = 'stylized-shuffle'
+  sortMode: SortMode = 'curated'
 ): LayoutRow[] {
   if (!photoList || photoList.length === 0) return [];
 
@@ -322,6 +328,44 @@ function buildAdjustableLayout(
     }
     return pRows;
   };
+
+  // ── CURATED / PRESERVED ORDER (DEFAULT): Strictly preserve original sequential index arrangement without skipping, swapping, or reordering ──
+  if (sortMode === 'curated') {
+    const rows: LayoutRow[] = [];
+    let i = 0;
+    while (i < taggedPhotos.length) {
+      const curr = taggedPhotos[i];
+      if (!curr.isPortrait) {
+        // Landscape photo sits full width in 16:9 cinematic aspect in exact sequence
+        rows.push({
+          id: `curated-landscape-${curr.photo.id}-${i}`,
+          type: 'landscape-16-9',
+          items: [{ photo: curr.photo, originalIndex: curr.originalIndex }],
+          columns: 1,
+          aspectClass: 'aspect-video md:aspect-[16/9]',
+          badge: getAspectBadge(curr.photo.aspect, curr.ratio)
+        });
+        i++;
+      } else {
+        // Adjacent portrait stills in exact sequence up to portraitColumns (e.g. 2 across diptychs)
+        const portraitChunk: typeof taggedPhotos = [];
+        while (i < taggedPhotos.length && taggedPhotos[i].isPortrait && portraitChunk.length < portraitColumns) {
+          portraitChunk.push(taggedPhotos[i]);
+          i++;
+        }
+        const { aspectClass, badge } = determineRowAspect(portraitChunk);
+        rows.push({
+          id: `curated-portraits-${portraitChunk[0].photo.id}-${i}`,
+          type: 'portraits-row',
+          items: portraitChunk.map(p => ({ photo: p.photo, originalIndex: p.originalIndex })),
+          columns: portraitChunk.length,
+          aspectClass,
+          badge
+        });
+      }
+    }
+    return rows;
+  }
 
   if (sortMode === 'stylized-shuffle') {
     // ── STYLIZED SHUFFLE: Non-repetitive editorial rhythm with anti-shoot diptych pairing ──
@@ -798,6 +842,23 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
     setTimeout(() => setNotification(null), 3000);
   };
 
+  const handleMovePhoto = async (photoId: string, direction: 'prev' | 'next') => {
+    const currentIndex = photos.findIndex(p => p.id === photoId);
+    if (currentIndex === -1) return;
+    const targetIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= photos.length) return;
+
+    const newPhotos = [...photos];
+    const [moved] = newPhotos.splice(currentIndex, 1);
+    newPhotos.splice(targetIndex, 0, moved);
+
+    setPhotos(newPhotos);
+    setIsCustomList(true);
+    await savePhotosToStorage(newPhotos);
+    setNotification('Photography arrangement order saved');
+    setTimeout(() => setNotification(null), 2500);
+  };
+
   const handleClearAllPhotos = async () => {
     await clearPhotosFromStorage();
     setPhotos([]);
@@ -942,6 +1003,18 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
               <ArrowUpDown className="w-2.5 h-2.5" />
               <span>Sort:</span>
             </span>
+            <button
+              onClick={() => setSortMode('curated')}
+              className={`px-2 py-1 rounded text-[10px] uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1 ${
+                sortMode === 'curated'
+                  ? 'bg-amber-400/25 text-amber-300 font-medium'
+                  : 'text-white/40 hover:text-white/70'
+              }`}
+              title="Curated Order: Exact preserved photography arrangement"
+            >
+              <Check className="w-2.5 h-2.5 text-amber-400" />
+              <span>Curated</span>
+            </button>
             <button
               onClick={() => {
                 setSortMode('stylized-shuffle');
@@ -1206,16 +1279,23 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
             </button>
           </div>
 
-          {/* Anti-Repetition Status Badge */}
+          {/* Status Badge */}
           <div className="flex items-center gap-2 text-[10px] text-white/50 shrink-0">
-            <button
-              onClick={handleTriggerShuffle}
-              className="group flex items-center gap-1.5 px-2 py-1 rounded bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/25 transition-all text-amber-300/90 hover:text-amber-200 cursor-pointer"
-              title="Click to reshuffle: prevents consecutive photos from the same photoshoot and interweaves moods"
-            >
-              <Shuffle className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500 text-amber-400" />
-              <span className="tracking-wide">Anti-Shoot Repetition Active</span>
-            </button>
+            {sortMode === 'curated' ? (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/[0.05] border border-white/10 text-white/80">
+                <Check className="w-3 h-3 text-amber-400" />
+                <span className="tracking-wide">Curated Sequence Preserved</span>
+              </span>
+            ) : (
+              <button
+                onClick={handleTriggerShuffle}
+                className="group flex items-center gap-1.5 px-2 py-1 rounded bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/25 transition-all text-amber-300/90 hover:text-amber-200 cursor-pointer"
+                title="Click to reshuffle: prevents consecutive photos from the same photoshoot and interweaves moods"
+              >
+                <Shuffle className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500 text-amber-400" />
+                <span className="tracking-wide">Anti-Shoot Repetition Active</span>
+              </button>
+            )}
             <span className="text-white/20 font-mono">·</span>
             <span className="font-mono text-amber-400/90">{filteredPhotos.length} Active / {layoutRows.length} Rows</span>
           </div>
@@ -1539,6 +1619,8 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
                     isLandscapeFullWidth
                     onSelect={() => openLightbox(item.originalIndex)}
                     onDelete={isCreator ? () => handleDeletePhoto(item.originalIndex) : undefined}
+                    onMovePrev={isCreator && item.originalIndex > 0 ? () => handleMovePhoto(item.photo.id, 'prev') : undefined}
+                    onMoveNext={isCreator && item.originalIndex < visiblePhotos.length - 1 ? () => handleMovePhoto(item.photo.id, 'next') : undefined}
                     onError={handleImageError}
                   />
                 </div>
@@ -1564,6 +1646,8 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
                       isLandscapeFullWidth={false}
                       onSelect={() => openLightbox(item.originalIndex)}
                       onDelete={isCreator ? () => handleDeletePhoto(item.originalIndex) : undefined}
+                      onMovePrev={isCreator && item.originalIndex > 0 ? () => handleMovePhoto(item.photo.id, 'prev') : undefined}
+                      onMoveNext={isCreator && item.originalIndex < visiblePhotos.length - 1 ? () => handleMovePhoto(item.photo.id, 'next') : undefined}
                       onError={handleImageError}
                     />
                   </div>
@@ -1598,6 +1682,8 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
                       isLandscapeFullWidth={false}
                       onSelect={() => openLightbox(item.originalIndex)}
                       onDelete={isCreator ? () => handleDeletePhoto(item.originalIndex) : undefined}
+                      onMovePrev={isCreator && item.originalIndex > 0 ? () => handleMovePhoto(item.photo.id, 'prev') : undefined}
+                      onMoveNext={isCreator && item.originalIndex < visiblePhotos.length - 1 ? () => handleMovePhoto(item.photo.id, 'next') : undefined}
                       onError={handleImageError}
                     />
                   </div>
@@ -1636,6 +1722,8 @@ interface FrameProps {
   isLandscapeFullWidth: boolean;
   onSelect: () => void;
   onDelete?: () => void;
+  onMovePrev?: () => void;
+  onMoveNext?: () => void;
   onError?: (id: string) => void;
 }
 
@@ -1649,6 +1737,8 @@ function InteractiveCatalogFrame({
   isLandscapeFullWidth,
   onSelect,
   onDelete,
+  onMovePrev,
+  onMoveNext,
   onError
 }: FrameProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1906,18 +1996,52 @@ function InteractiveCatalogFrame({
           <span>Inspect</span>
         </div>
 
-        {/* Delete Photo Button on Hover */}
-        {onDelete && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="absolute top-3 left-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2 bg-black/80 hover:bg-red-600/90 backdrop-blur-md rounded-full border border-white/20 text-white/70 hover:text-white cursor-pointer shadow-lg"
-            title="Remove photograph"
+        {/* Creator Controls on Hover (Reorder & Remove) */}
+        {(onDelete || onMovePrev || onMoveNext) && (
+          <div 
+            className="absolute top-3 left-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1 bg-black/85 backdrop-blur-md rounded-full border border-white/20 p-1 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
           >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
+            {onMovePrev && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMovePrev();
+                }}
+                className="p-1.5 hover:bg-white/20 rounded-full text-white/80 hover:text-white cursor-pointer transition-colors"
+                title="Move earlier in sequence"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+            )}
+            {onMoveNext && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMoveNext();
+                }}
+                className="p-1.5 hover:bg-white/20 rounded-full text-white/80 hover:text-white cursor-pointer transition-colors"
+                title="Move later in sequence"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
+                className="p-1.5 hover:bg-red-600/90 rounded-full text-white/70 hover:text-white cursor-pointer transition-colors ml-0.5"
+                title="Remove photograph"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>

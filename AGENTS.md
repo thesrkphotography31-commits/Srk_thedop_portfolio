@@ -25,6 +25,11 @@ This file locks in the user-approved milestone version, architectural decisions,
   - **No dark bottom vignette**: Frames display crisp, clean edge-to-edge images.
   - **Top-right Inspect Pill**: The clean hover Inspect pill is retained for full-screen inspection.
   - Continuous vertical photo flow with automatic widescreen 16:9 detection and paired portrait layouts.
+  - **Photography Arrangement & Sequence Lock**:
+    - The arrangement and exact sequence of photography stills is strictly preserved in its original curated order and saved in persistent storage.
+    - Default sort mode is strictly 'Curated'; the portfolio must never reorder or scramble photos on initial load or refreshes.
+    - All layout choices (columns, fitMode, zoomMode, sortMode) are saved and persisted.
+    - In Creator mode, stills can be ordered forward/backward with instant persistence.
 
 - **Customization & Jumble Tab (Both Disciplines)**:
   - Both Photography and Videography sections must feature the customization toolbar:
