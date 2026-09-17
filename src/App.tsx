@@ -201,13 +201,29 @@ const VIDEO_PROJECTS: VideoProject[] = [
     year: '2024',
     category: 'event',
     youtubeId: 'eLAbF6DWp8A',
-    videoUrl: 'https://www.youtube.com/watch?v=eLAbF6DWp8A',
-    thumbnail: '/Vir-8.JPEG',
+    videoUrl: 'https://youtu.be/eLAbF6DWp8A',
+    thumbnail: 'https://img.youtube.com/vi/eLAbF6DWp8A/sddefault.jpg',
     aspect: '16/9',
     role: 'Cinematographer',
     client: 'Vir Das',
     description: 'Multi-camera live concert and arena tour film capturing timing, crowd energy, and intimate stage moments.',
     allowsEmbed: true
+  },
+  {
+    id: 'alan-walker-kingfisher',
+    title: 'Alan Walker Kingfisher',
+    highlight: '',
+    tag: 'Concert & Event · Cinematographer',
+    year: '2024',
+    category: 'event',
+    youtubeId: 'chfwqrpuYM0',
+    videoUrl: 'https://youtu.be/chfwqrpuYM0',
+    thumbnail: 'https://img.youtube.com/vi/chfwqrpuYM0/maxresdefault.jpg',
+    aspect: '16/9',
+    role: 'Cinematographer',
+    client: 'Kingfisher / Alan Walker',
+    description: 'High-energy live concert and arena tour visual coverage capturing electrifying stage production, crowd scale, and dynamic pacing.',
+    allowsEmbed: false
   },
   {
     id: 'prestige-cookware',
@@ -271,7 +287,7 @@ const VIDEO_PROJECTS: VideoProject[] = [
   },
   {
     id: 'featured-film-z0qm',
-    title: 'Featured Film',
+    title: 'Probio Haircare',
     highlight: '',
     tag: 'Commercial & Narrative · Cinematographer / DOP',
     year: '2025',
@@ -1040,24 +1056,26 @@ export default function App() {
       {/* ── WORK SHOWCASE SECTION ────────────────────── */}
       <section id="work" className="pt-6 sm:pt-8 md:pt-10">
         
-        {/* Section Header */}
-        <div className="px-6 md:px-12 py-3.5 sm:py-4 flex items-center justify-between border-b border-white/[0.06]">
-          <h2 className="font-serif-garamond text-2xl sm:text-3xl md:text-4xl text-[#f0ede8] font-normal">
+        {/* Section Header & Discipline Switcher: Unified Centered Header */}
+        <div className="relative px-6 md:px-12 py-6 sm:py-8 border-b border-white/[0.06] bg-[#0b0b0b]/60 flex flex-col items-center justify-center">
+          {/* Year Label positioned on the right */}
+          <div className="absolute right-6 md:right-12 top-6 sm:top-8 pointer-events-none">
+            <span className="font-serif-garamond text-[13px] sm:text-[16px] text-[#f0ede8]/40 tracking-wider">
+              2019 &ndash; 2026
+            </span>
+          </div>
+
+          {/* Heading - Center-aligned horizontally within main container */}
+          <h2 className="font-serif-garamond text-2xl sm:text-3xl md:text-4xl text-[#f0ede8] font-normal text-center">
             Archive &amp; Motion Stills
           </h2>
-          <span className="font-serif-garamond text-[14px] sm:text-[16px] text-[#f0ede8]/40 tracking-wider">
-            2019 &ndash; 2026
-          </span>
-        </div>
 
-        {/* Discipline Switcher: Compact Centered Segmented Toggle */}
-        <div className="px-4 sm:px-8 py-5 sm:py-6 border-b border-white/[0.06] bg-[#0b0b0b]/60 flex items-center justify-center">
-          {/* Segmented Switch Container */}
+          {/* Discipline Switcher: Center-aligned directly beneath heading sharing the exact same central axis */}
           <div 
             id="work-discipline-toggle"
             role="tablist"
             aria-label="Select Work Category: Videography or Photography"
-            className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-[#0e0e0e] border border-white/[0.1] rounded-xl p-1 shadow-md"
+            className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-[#0e0e0e] border border-white/[0.1] rounded-xl p-1 shadow-md mt-4 sm:mt-5"
           >
             <div className="grid grid-cols-2 gap-1 sm:gap-1.5">
               {/* Videography Option Button */}
@@ -1125,8 +1143,8 @@ export default function App() {
       </section>
 
       {/* ── ABOUT SECTION ────────────────────────────── */}
-      <section id="about" className="py-20 md:py-32 px-6 md:px-12 border-t border-white/[0.06] bg-[#0c0c0c]/80">
-        <div className="max-w-7xl mx-auto space-y-14 md:space-y-18">
+      <section id="about" className="pt-20 md:pt-28 pb-12 md:pb-16 px-6 md:px-12 border-t border-white/[0.06] bg-[#0c0c0c]/80">
+        <div className="max-w-7xl mx-auto space-y-12 md:space-y-14">
           
           {/* ── TOP ROW: Filmmaker Portrait, Headline & Industry Credentials ── */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center pb-12 sm:pb-16 border-b border-white/[0.08]">
@@ -1319,11 +1337,11 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             
             {/* Primary Column: Main About Description */}
-            <div className="lg:col-span-7 space-y-5">
+            <div className="lg:col-span-7 space-y-4">
               <span className="text-[10.5px] sm:text-[11px] font-mono tracking-[0.22em] uppercase text-white/40 block mb-3">
                 Background &amp; Storytelling Approach
               </span>
-              <div className="space-y-6 text-[#f0ede8]/70 text-[14px] sm:text-[15px] md:text-[16px] leading-[1.85] font-light">
+              <div className="space-y-6 sm:space-y-7 text-[#f0ede8]/75 text-[16px] sm:text-[17px] md:text-[18px] lg:text-[18.5px] xl:text-[19px] leading-[1.88] sm:leading-[1.92] md:leading-[1.95] font-light">
                 {aboutData?.paragraphs && aboutData.paragraphs.length > 0 ? (
                   aboutData.paragraphs.map((p: string, idx: number) => (
                     <p key={idx}>{p}</p>
@@ -1352,15 +1370,15 @@ export default function App() {
 
             {/* Secondary Column: Production & Creative Capabilities Box */}
             <div className="lg:col-span-5">
-              <div className="p-6 sm:p-8 bg-[#0e0e0e] border border-white/[0.08] rounded-xl space-y-6">
-                <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-                  <span className="text-[10px] sm:text-[11px] font-medium tracking-[0.22em] uppercase text-white/50 block">
+              <div className="p-5 sm:p-6 bg-[#0e0e0e] border border-white/[0.08] rounded-xl space-y-4 sm:space-y-5">
+                <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">
+                  <span className="text-[10px] sm:text-[10.5px] font-medium tracking-[0.22em] uppercase text-white/50 block">
                     Production &amp; Creative Capabilities
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-[#D8C7A5]/70" />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-x-5 gap-y-3.5 pt-0.5">
                   {(aboutData?.capabilityGroups || defaultPortfolioContent.about?.capabilityGroups || [
                     {
                       category: "Creative & Direction",
@@ -1398,16 +1416,16 @@ export default function App() {
                       ]
                     }
                   ]).map((group: any, gIdx: number) => (
-                    <div key={gIdx} className="space-y-2.5">
-                      <h4 className="text-[10.5px] sm:text-[11px] font-mono font-medium tracking-[0.18em] uppercase text-white/60 flex items-center gap-2">
+                    <div key={gIdx} className="space-y-1.5">
+                      <h4 className="text-[10px] sm:text-[10.5px] font-mono font-medium tracking-[0.16em] uppercase text-white/60 flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
                         {group.category}
                       </h4>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5">
                         {group.items.map((item: string, iIdx: number) => (
                           <span 
                             key={iIdx} 
-                            className="px-3 py-1.5 bg-[#161616] border border-white/[0.07] text-white/75 text-[11px] sm:text-[12px] rounded-lg tracking-wide hover:border-white/20 transition-colors"
+                            className="px-2.5 py-1 bg-[#161616] border border-white/[0.07] text-white/75 text-[10.5px] sm:text-[11px] rounded-md tracking-wide hover:border-white/20 transition-colors"
                           >
                             {item}
                           </span>
@@ -1425,7 +1443,7 @@ export default function App() {
       </section>
 
       {/* ── CONTACT & BOOKING SECTION ────────────────── */}
-      <section id="contact" className="py-24 md:py-36 px-6 md:px-12 border-t border-white/[0.06]">
+      <section id="contact" className="pt-14 md:pt-20 pb-24 md:pb-36 px-6 md:px-12 border-t border-white/[0.06]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start max-w-7xl mx-auto">
           
           <div className="lg:col-span-6">
@@ -1703,7 +1721,7 @@ export default function App() {
                 </h3>
               </div>
               <div className="flex items-center gap-2">
-                {selectedVideoModal.allowsEmbed === false && selectedVideoModal.videoUrl && (
+                {selectedVideoModal.videoUrl && (
                   <a
                     href={selectedVideoModal.videoUrl}
                     target="_blank"

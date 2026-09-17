@@ -69,7 +69,8 @@ const FALLBACK_POSTERS: Record<string, string> = {
   'salesforce-event': 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80',
   'hdfc-ergo': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
   'digiyatra-podcast': 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80',
-  'virdas-tour': '/Vir-8.JPEG',
+  'virdas-tour': '/virdas-youtube-thumbnail.jpg',
+  'alan-walker-kingfisher': '/alan-walker-kingfisher.jpg',
   'prestige-cookware': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80',
   'fixderma-product': 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=80',
   'xiaomi-event': 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1200&q=80',
@@ -212,7 +213,12 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
 
   // Helper to get poster image
   const getPosterUrl = (video: VideoProject) => {
-    if (video.id === 'virdas-tour') return '/Vir-8.JPEG';
+    if (video.id === 'virdas-tour') {
+      return video.thumbnail || 'https://img.youtube.com/vi/eLAbF6DWp8A/sddefault.jpg';
+    }
+    if (video.id === 'alan-walker-kingfisher') {
+      return video.thumbnail || 'https://img.youtube.com/vi/chfwqrpuYM0/maxresdefault.jpg';
+    }
     if (video.thumbnail) return video.thumbnail;
     if (video.imageUrl) return video.imageUrl;
     if (video.youtubeId) {
@@ -544,6 +550,17 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
             : 'aspect-video';
 
           const handleCardClick = () => {
+            if (video.id === 'virdas-tour' || video.id === 'alan-walker-kingfisher') {
+              const url = video.videoUrl || (video.youtubeId ? `https://youtu.be/${video.youtubeId}` : 'https://youtu.be/chfwqrpuYM0');
+              const a = document.createElement('a');
+              a.href = url;
+              a.target = '_blank';
+              a.rel = 'noopener noreferrer';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              return;
+            }
             if (canEmbed) {
               setInlinePlayingId(video.id);
             } else {
@@ -658,10 +675,16 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                       onError={(e) => {
                         const target = e.currentTarget;
                         if (video.id === 'virdas-tour') {
-                          if (!target.src.endsWith('/Vir-8.JPEG') && !target.src.endsWith('/vir-8.jpeg')) {
-                            target.src = '/Vir-8.JPEG';
-                          } else {
-                            target.src = '/virdas-poster.jpg';
+                          if (!target.src.includes('virdas-youtube-thumbnail.jpg')) {
+                            target.src = '/virdas-youtube-thumbnail.jpg';
+                          } else if (!target.src.includes('hqdefault')) {
+                            target.src = 'https://img.youtube.com/vi/eLAbF6DWp8A/hqdefault.jpg';
+                          }
+                        } else if (video.id === 'alan-walker-kingfisher') {
+                          if (!target.src.includes('alan-walker-kingfisher.jpg')) {
+                            target.src = '/alan-walker-kingfisher.jpg';
+                          } else if (!target.src.includes('sddefault')) {
+                            target.src = 'https://img.youtube.com/vi/chfwqrpuYM0/sddefault.jpg';
                           }
                         } else if (FALLBACK_POSTERS[video.id] && !target.src.includes(FALLBACK_POSTERS[video.id])) {
                           target.src = FALLBACK_POSTERS[video.id];
@@ -682,7 +705,9 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (canEmbed) {
+                          if (video.id === 'virdas-tour' || video.id === 'alan-walker-kingfisher') {
+                            handleCardClick();
+                          } else if (canEmbed) {
                             setInlinePlayingId(video.id);
                           } else {
                             handleCardClick();

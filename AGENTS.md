@@ -52,7 +52,7 @@ This file locks in the user-approved milestone version, architectural decisions,
 - **LinkedIn**: `https://www.linkedin.com/in/sriram-karthick-2250551ab/`.
 - **Location**: `Bengaluru, India · Available Worldwide`.
 - **Hyundai Video**: `Hyundai Ioniq Hi-tea` (YouTube ID: `PKHYOfKeQH8`).
-- **Featured Film Reel**: `Featured Film` (YouTube ID: `Z0qMvkytexc`).
+- **Featured Film Reel / Probio Haircare**: `Probio Haircare` (YouTube ID: `Z0qMvkytexc`).
 - **Get in Touch Structure**: Clean single-row layout without separate YouTube/channel row.
 
 ## 5. Publishing, Build & Auto-Sync State
