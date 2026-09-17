@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { 
   Maximize2, 
   Minimize2, 
@@ -125,6 +125,106 @@ export type MoodFilter = 'all' | PhotoMood;
 export type ColorSpaceFilter = 'all' | PhotoColorSpace;
 export type CategoryFilter = 'all' | PhotoCategory;
 export type FilterTab = 'mood' | 'color' | 'category' | 'aspect';
+
+export interface SavedPhotographySettings {
+  portraitColumns: PortraitColumns;
+  fitMode: FitMode;
+  flowStyle: FlowStyle;
+  zoomMode: CursorScrollMode;
+  aspectFilter: AspectFilter;
+  sortMode: SortMode;
+  shuffleSeed: number;
+  activeFilterTab: FilterTab;
+  moodFilter: MoodFilter;
+  colorFilter: ColorSpaceFilter;
+  categoryFilter: CategoryFilter;
+}
+
+const STORAGE_KEY_PHOTO_SETTINGS = 'srk_portfolio_photography_settings';
+
+const DEFAULT_PHOTO_SETTINGS: SavedPhotographySettings = {
+  portraitColumns: 2,
+  fitMode: 'fill',
+  flowStyle: 'rhythmic',
+  zoomMode: 'parallax',
+  aspectFilter: 'all',
+  sortMode: 'stylized-shuffle',
+  shuffleSeed: 101, // Deterministic stable seed ensuring no random jumbling across refreshes
+  activeFilterTab: 'mood',
+  moodFilter: 'all',
+  colorFilter: 'all',
+  categoryFilter: 'all'
+};
+
+function loadSavedPhotographySettings(): SavedPhotographySettings {
+  if (typeof window === 'undefined') return DEFAULT_PHOTO_SETTINGS;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_PHOTO_SETTINGS);
+    if (!raw) return DEFAULT_PHOTO_SETTINGS;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return DEFAULT_PHOTO_SETTINGS;
+
+    const portraitColumns: PortraitColumns = (parsed.portraitColumns === 2 || parsed.portraitColumns === 3 || parsed.portraitColumns === 4)
+      ? parsed.portraitColumns
+      : DEFAULT_PHOTO_SETTINGS.portraitColumns;
+
+    const fitMode: FitMode = (parsed.fitMode === 'fill' || parsed.fitMode === 'contain')
+      ? parsed.fitMode
+      : DEFAULT_PHOTO_SETTINGS.fitMode;
+
+    const flowStyle: FlowStyle = (parsed.flowStyle === 'rhythmic' || parsed.flowStyle === 'widescreen')
+      ? parsed.flowStyle
+      : DEFAULT_PHOTO_SETTINGS.flowStyle;
+
+    const zoomMode: CursorScrollMode = (['parallax', 'scroll-zoom', 'pan-drift', 'ambient-glow', 'static'] as string[]).includes(parsed.zoomMode)
+      ? parsed.zoomMode
+      : DEFAULT_PHOTO_SETTINGS.zoomMode;
+
+    const aspectFilter: AspectFilter = (['all', '16/9', '9/16', '2/3', '3/4'] as string[]).includes(parsed.aspectFilter)
+      ? parsed.aspectFilter
+      : DEFAULT_PHOTO_SETTINGS.aspectFilter;
+
+    const sortMode: SortMode = (['stylized-shuffle', 'neat-aspect', 'newest', 'rhythmic'] as string[]).includes(parsed.sortMode)
+      ? parsed.sortMode
+      : DEFAULT_PHOTO_SETTINGS.sortMode;
+
+    const shuffleSeed: number = (typeof parsed.shuffleSeed === 'number' && !isNaN(parsed.shuffleSeed))
+      ? parsed.shuffleSeed
+      : DEFAULT_PHOTO_SETTINGS.shuffleSeed;
+
+    const activeFilterTab: FilterTab = (['mood', 'color', 'category', 'aspect'] as string[]).includes(parsed.activeFilterTab)
+      ? parsed.activeFilterTab
+      : DEFAULT_PHOTO_SETTINGS.activeFilterTab;
+
+    const moodFilter: MoodFilter = typeof parsed.moodFilter === 'string' && parsed.moodFilter.length > 0
+      ? parsed.moodFilter
+      : DEFAULT_PHOTO_SETTINGS.moodFilter;
+
+    const colorFilter: ColorSpaceFilter = typeof parsed.colorFilter === 'string' && parsed.colorFilter.length > 0
+      ? parsed.colorFilter
+      : DEFAULT_PHOTO_SETTINGS.colorFilter;
+
+    const categoryFilter: CategoryFilter = typeof parsed.categoryFilter === 'string' && parsed.categoryFilter.length > 0
+      ? parsed.categoryFilter
+      : DEFAULT_PHOTO_SETTINGS.categoryFilter;
+
+    return {
+      portraitColumns,
+      fitMode,
+      flowStyle,
+      zoomMode,
+      aspectFilter,
+      sortMode,
+      shuffleSeed,
+      activeFilterTab,
+      moodFilter,
+      colorFilter,
+      categoryFilter
+    };
+  } catch (err) {
+    return DEFAULT_PHOTO_SETTINGS;
+  }
+}
 
 interface LayoutRow {
   id: string;
@@ -399,19 +499,13 @@ export interface PhotoCatalogProps {
 
 export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalogProps) {
   const [photos, setPhotos] = useState<CatalogPhoto[]>(() => {
-    if (typeof window !== 'undefined') {
+    if (isCreator && typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('srk_portfolio_catalog_photos');
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
             const sanitized = sanitizePhotos(parsed);
-            if (sanitized.length !== parsed.length) {
-              try {
-                localStorage.setItem('srk_portfolio_catalog_photos', JSON.stringify(sanitized));
-                localStorage.setItem('srk_custom_photos_count', sanitized.length.toString());
-              } catch {}
-            }
             if (sanitized.length > 0) return sanitized;
           }
         }
@@ -423,7 +517,7 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
   const [failedPhotoIds, setFailedPhotoIds] = useState<Set<string>>(new Set());
 
   const [isCustomList, setIsCustomList] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
+    if (isCreator && typeof window !== 'undefined') {
       try {
         return localStorage.getItem('srk_has_custom_photos') === 'true';
       } catch {}
@@ -431,20 +525,57 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
     return false;
   });
 
-  // Adjustable layout states
-  const [portraitColumns, setPortraitColumns] = useState<PortraitColumns>(2);
-  const [fitMode, setFitMode] = useState<FitMode>('fill');
-  const [flowStyle, setFlowStyle] = useState<FlowStyle>('rhythmic');
-  const [zoomMode, setZoomMode] = useState<CursorScrollMode>('parallax');
-  const [aspectFilter, setAspectFilter] = useState<AspectFilter>('all');
-  const [sortMode, setSortMode] = useState<SortMode>('stylized-shuffle');
-  const [shuffleSeed, setShuffleSeed] = useState<number>(() => Date.now());
+  // Pre-load validated saved photography settings from localStorage
+  const initialSettings = useMemo(() => loadSavedPhotographySettings(), []);
 
-  // Curation Filters: Mood, Color Space, Category, Aspect
-  const [activeFilterTab, setActiveFilterTab] = useState<FilterTab>('mood');
-  const [moodFilter, setMoodFilter] = useState<MoodFilter>('all');
-  const [colorFilter, setColorFilter] = useState<ColorSpaceFilter>('all');
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+  // Adjustable layout states restored from localStorage
+  const [portraitColumns, setPortraitColumns] = useState<PortraitColumns>(() => initialSettings.portraitColumns);
+  const [fitMode, setFitMode] = useState<FitMode>(() => initialSettings.fitMode);
+  const [flowStyle, setFlowStyle] = useState<FlowStyle>(() => initialSettings.flowStyle);
+  const [zoomMode, setZoomMode] = useState<CursorScrollMode>(() => initialSettings.zoomMode);
+  const [aspectFilter, setAspectFilter] = useState<AspectFilter>(() => initialSettings.aspectFilter);
+  const [sortMode, setSortMode] = useState<SortMode>(() => initialSettings.sortMode);
+  const [shuffleSeed, setShuffleSeed] = useState<number>(() => initialSettings.shuffleSeed);
+
+  // Curation Filters: Mood, Color Space, Category, Aspect restored from localStorage
+  const [activeFilterTab, setActiveFilterTab] = useState<FilterTab>(() => initialSettings.activeFilterTab);
+  const [moodFilter, setMoodFilter] = useState<MoodFilter>(() => initialSettings.moodFilter);
+  const [colorFilter, setColorFilter] = useState<ColorSpaceFilter>(() => initialSettings.colorFilter);
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>(() => initialSettings.categoryFilter);
+
+  // Persist all photography settings immediately upon user modification
+  useEffect(() => {
+    try {
+      const payload: SavedPhotographySettings = {
+        portraitColumns,
+        fitMode,
+        flowStyle,
+        zoomMode,
+        aspectFilter,
+        sortMode,
+        shuffleSeed,
+        activeFilterTab,
+        moodFilter,
+        colorFilter,
+        categoryFilter
+      };
+      localStorage.setItem(STORAGE_KEY_PHOTO_SETTINGS, JSON.stringify(payload));
+    } catch (err) {
+      console.warn('Failed to save photography settings to localStorage:', err);
+    }
+  }, [
+    portraitColumns,
+    fitMode,
+    flowStyle,
+    zoomMode,
+    aspectFilter,
+    sortMode,
+    shuffleSeed,
+    activeFilterTab,
+    moodFilter,
+    colorFilter,
+    categoryFilter
+  ]);
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [processingStatus, setProcessingStatus] = useState<string>('');
@@ -455,8 +586,14 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
   const catalogRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load photos asynchronously from storage
+  // Load photos asynchronously from storage ONLY in Creator Mode
   useEffect(() => {
+    if (!isCreator) {
+      setPhotos(CATALOG_PHOTOS);
+      setIsCustomList(false);
+      return;
+    }
+
     let active = true;
     loadPhotosFromStorage().then((stored) => {
       if (!active) return;
@@ -465,12 +602,9 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
         if (cleaned.length > 0) {
           setPhotos(cleaned);
           setIsCustomList(true);
-          // Automatically sync stored custom photos to server codebase
-          syncAllToCodebase({ photos: cleaned }).catch(() => {});
           return;
         }
       }
-      // If local storage is empty, make sure CATALOG_PHOTOS are used
       if (photos.length === 0 && CATALOG_PHOTOS.length > 0) {
         setPhotos(CATALOG_PHOTOS);
       }
@@ -484,7 +618,7 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
     return () => {
       active = false;
     };
-  }, []);
+  }, [isCreator]);
 
   // Monitor scroll position
   useEffect(() => {

@@ -3,13 +3,14 @@
   "heroFocus": "face",
   "portrait": "/sriram-portrait.jpg",
   "about": {
-    "headline": "I tell stories through light, movement and real moments.",
-    "subtitle": "DOP / VIDEOGRAPHER / PHOTOGRAPHER",
+    "headline": "I build visual stories from the first idea to the final frame.",
+    "subtitle": "FILMMAKER / CINEMATOGRAPHER / CREATIVE PRODUCER",
     "paragraphs": [
-      "I'm a cinematographer, videographer and photographer with over 7 years of experience crafting visuals for brands, artists and businesses. I work across commercials, brand films, product videos, live events and personal projects — always with a focus on strong visual storytelling and intentional, cinematic imagery.",
-      "From the first idea to the final frame, I bring a collaborative and detail-oriented approach to every project. Whether it's a high-energy commercial, a documentary-style film or a simple product shoot, my goal is the same — to create visuals that feel authentic, memorable and aligned with your story.",
-      "I'm comfortable working across different scales — from independent projects to large-scale productions — and I adapt to the needs of each project, bringing a mix of technical expertise, creative instinct and reliability on set.",
-      "If you're looking for a DOP, videographer or photographer who can understand your vision and bring it to life with a cinematic, honest and compelling visual language, let's create something together."
+      "I'm a filmmaker, cinematographer and creative producer with over 7 years of experience developing and producing visual stories for brands, businesses and people.",
+      "My work spans commercials, brand films, documentaries, product films, events and photography. I approach every project through the lens of storytelling, combining creative direction, visual craft and practical production thinking.",
+      "From shaping an initial concept and planning the shoot to working with teams on set and refining the final edit, I enjoy being involved in the complete creative process.",
+      "Whether it's a large-scale production or a focused visual project, my goal is to create work that is purposeful, cinematic and connected to the audience.",
+      "I collaborate with brands, agencies and creative teams to develop ideas into meaningful visual experiences."
     ],
     "stats": [
       {
@@ -32,7 +33,45 @@
       "Production",
       "Gimbal Operator",
       "DaVinci Resolve Grading",
-      "Pre-Production"
+      "Pre-Production",
+      "Post-Production"
+    ],
+    "capabilityGroups": [
+      {
+        "category": "Creative & Direction",
+        "items": [
+          "Concept Development",
+          "Creative Direction",
+          "Pre-Production",
+          "Shoot Planning"
+        ]
+      },
+      {
+        "category": "Production",
+        "items": [
+          "Cinematography & Camera Operation",
+          "ARRI Alexa Mini LF",
+          "Sony FX3 / FX6 / FX9",
+          "Gimbal Operator",
+          "On-Set Production & Crew Direction"
+        ]
+      },
+      {
+        "category": "Post-Production",
+        "items": [
+          "DaVinci Resolve Grading",
+          "Post-Production Supervision",
+          "Final Edit Refinement"
+        ]
+      },
+      {
+        "category": "Photography",
+        "items": [
+          "Commercial & Brand Stills",
+          "Editorial & Portrait Photography",
+          "Event Coverage"
+        ]
+      }
     ]
   },
   "photos": [
@@ -44,8 +83,8 @@
       "height": 1707,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "category": "commercial-still",
+      "dominantColor": "#886258"
     },
     {
       "id": "photo-02",
@@ -56,7 +95,7 @@
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#8e7c6c"
     },
     {
       "id": "photo-03",
@@ -64,10 +103,10 @@
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "mood": "cinematic-noir",
+      "colorSpace": "deep-noir",
+      "category": "commercial-still",
+      "dominantColor": "#11134a"
     },
     {
       "id": "photo-04",
@@ -75,10 +114,10 @@
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "mood": "cinematic-noir",
+      "colorSpace": "deep-noir",
+      "category": "commercial-still",
+      "dominantColor": "#5a4f49"
     },
     {
       "id": "photo-05",
@@ -88,8 +127,8 @@
       "height": 1710,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "category": "commercial-still",
+      "dominantColor": "#5d738d"
     },
     {
       "id": "photo-06",
@@ -98,20 +137,20 @@
       "width": 1707,
       "height": 2560,
       "mood": "golden-hour",
-      "colorSpace": "warm-gold",
+      "colorSpace": "monochrome",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#5b5253"
     },
     {
       "id": "photo-07",
       "imageUrl": "/photos/photo-07.jpg",
-      "aspect": "3/4",
+      "aspect": "4/5",
       "width": 1240,
       "height": 1550,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#aa8878"
     },
     {
       "id": "photo-08",
@@ -121,8 +160,8 @@
       "height": 1066,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "category": "commercial-still",
+      "dominantColor": "#676635"
     },
     {
       "id": "photo-09",
@@ -133,7 +172,7 @@
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#d4b09a"
     },
     {
       "id": "photo-10",
@@ -143,19 +182,19 @@
       "height": 1706,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "category": "commercial-still",
+      "dominantColor": "#b25e85"
     },
     {
       "id": "photo-11",
       "imageUrl": "/photos/photo-11.jpg",
-      "aspect": "2/3",
+      "aspect": "9/16",
       "width": 1440,
       "height": 2560,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
+      "mood": "cinematic-noir",
+      "colorSpace": "deep-noir",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#334325"
     },
     {
       "id": "photo-12",
@@ -164,9 +203,9 @@
       "width": 2560,
       "height": 1707,
       "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "colorSpace": "monochrome",
+      "category": "street-documentary",
+      "dominantColor": "#776c68"
     },
     {
       "id": "photo-13",
@@ -176,19 +215,19 @@
       "height": 934,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "category": "commercial-still",
+      "dominantColor": "#b5a489"
     },
     {
       "id": "photo-14",
       "imageUrl": "/photos/photo-14.jpg",
-      "aspect": "3/4",
+      "aspect": "4/5",
       "width": 2048,
       "height": 2560,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#7a5744"
     },
     {
       "id": "photo-15",
@@ -196,10 +235,10 @@
       "aspect": "2/3",
       "width": 1707,
       "height": 2560,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
+      "mood": "cinematic-noir",
+      "colorSpace": "cool-cyan",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#455062"
     },
     {
       "id": "photo-16",
@@ -207,10 +246,10 @@
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "mood": "cinematic-noir",
+      "colorSpace": "deep-noir",
+      "category": "commercial-still",
+      "dominantColor": "#452f20"
     },
     {
       "id": "photo-17",
@@ -218,10 +257,10 @@
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "mood": "cinematic-noir",
+      "colorSpace": "deep-noir",
+      "category": "commercial-still",
+      "dominantColor": "#3f2211"
     },
     {
       "id": "photo-18",
@@ -229,21 +268,21 @@
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "mood": "cinematic-noir",
+      "colorSpace": "deep-noir",
+      "category": "commercial-still",
+      "dominantColor": "#43393a"
     },
     {
       "id": "photo-19",
       "imageUrl": "/photos/photo-19.jpg",
-      "aspect": "3/4",
+      "aspect": "4/5",
       "width": 1240,
       "height": 1550,
       "mood": "golden-hour",
-      "colorSpace": "warm-gold",
+      "colorSpace": "high-key",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#e0ccbe"
     },
     {
       "id": "photo-20",
@@ -251,10 +290,10 @@
       "aspect": "4/3",
       "width": 2560,
       "height": 2048,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "mood": "ethereal-cool",
+      "colorSpace": "cool-cyan",
+      "category": "commercial-still",
+      "dominantColor": "#aab2a3"
     },
     {
       "id": "photo-21",
@@ -262,10 +301,10 @@
       "aspect": "4/3",
       "width": 2560,
       "height": 2048,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "mood": "ethereal-cool",
+      "colorSpace": "cool-cyan",
+      "category": "commercial-still",
+      "dominantColor": "#aeb5a7"
     },
     {
       "id": "photo-22",
@@ -275,8 +314,8 @@
       "height": 2048,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "category": "commercial-still",
+      "dominantColor": "#74756a"
     },
     {
       "id": "photo-23",
@@ -286,8 +325,8 @@
       "height": 2048,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "category": "commercial-still",
+      "dominantColor": "#9f9b8a"
     },
     {
       "id": "photo-24",
@@ -297,8 +336,8 @@
       "height": 2048,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "category": "commercial-still",
+      "dominantColor": "#8a8b6c"
     },
     {
       "id": "photo-25",
@@ -306,10 +345,10 @@
       "aspect": "2/3",
       "width": 1707,
       "height": 2560,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
+      "mood": "ethereal-cool",
+      "colorSpace": "cool-cyan",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#18b0a0"
     },
     {
       "id": "photo-26",
@@ -317,10 +356,10 @@
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "mood": "cinematic-noir",
+      "colorSpace": "deep-noir",
+      "category": "commercial-still",
+      "dominantColor": "#2c365d"
     },
     {
       "id": "photo-27",
@@ -330,8 +369,8 @@
       "height": 1707,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "category": "commercial-still",
+      "dominantColor": "#bfb09c"
     },
     {
       "id": "photo-28",
@@ -339,21 +378,21 @@
       "aspect": "1/1",
       "width": 1080,
       "height": 1080,
-      "mood": "golden-hour",
-      "colorSpace": "warm-gold",
-      "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "mood": "cinematic-noir",
+      "colorSpace": "deep-noir",
+      "category": "commercial-still",
+      "dominantColor": "#46464d"
     },
     {
       "id": "photo-29",
       "imageUrl": "/photos/photo-29.jpg",
-      "aspect": "2/3",
+      "aspect": "9/16",
       "width": 1440,
       "height": 2560,
       "mood": "golden-hour",
       "colorSpace": "warm-gold",
       "category": "editorial-portrait",
-      "dominantColor": "#9e8574"
+      "dominantColor": "#8f957b"
     }
   ]
 }

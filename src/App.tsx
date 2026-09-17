@@ -6,6 +6,8 @@ import {
   Play, 
   Film, 
   Camera, 
+  Video,
+  Image,
   Mail, 
   Phone, 
   Linkedin, 
@@ -538,7 +540,13 @@ export default function App() {
   const [aboutData, setAboutData] = useState(() => {
     try {
       const saved = localStorage.getItem('srk_portfolio_about');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // If saved state is from the old copy, prefer updated defaultPortfolioContent.about
+        if (parsed.headline && parsed.headline !== "I tell stories through light, movement and real moments.") {
+          return parsed;
+        }
+      }
     } catch {}
     return defaultPortfolioContent.about;
   });
@@ -585,46 +593,28 @@ export default function App() {
     }
   };
 
-  // Auto-sync on startup so any edits in browser are immediately written to files
+  // Auto-sync on startup for custom hero/about if present in browser
   useEffect(() => {
     const runAutoSync = async () => {
       try {
-        const localPhotosRaw = localStorage.getItem('srk_portfolio_catalog_photos');
         const localPortrait = localStorage.getItem('srk_portfolio_portrait');
         const localHero = localStorage.getItem('srk_portfolio_hero');
         const localHeroFocus = localStorage.getItem('srk_portfolio_hero_focus') || undefined;
         const localAboutRaw = localStorage.getItem('srk_portfolio_about');
 
-        let photos = undefined;
-        if (localPhotosRaw) {
-          try {
-            const parsed = JSON.parse(localPhotosRaw);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              const cleaned = sanitizePhotos(parsed);
-              photos = cleaned;
-              if (cleaned.length !== parsed.length) {
-                try {
-                  localStorage.setItem('srk_portfolio_catalog_photos', JSON.stringify(cleaned));
-                  localStorage.setItem('srk_custom_photos_count', cleaned.length.toString());
-                } catch {}
-              }
-            }
-          } catch {}
-        }
         let about = undefined;
         if (localAboutRaw) {
           try { about = JSON.parse(localAboutRaw); } catch {}
         }
 
-        if (photos || localPortrait || localHero || localAboutRaw) {
+        if (localPortrait || localHero || localAboutRaw) {
           await syncAllToCodebase({
-            photos,
             portrait: localPortrait,
             hero: localHero,
             heroFocus: localHeroFocus,
             about
           });
-          console.debug('Auto-synced state to server codebase');
+          console.debug('Auto-synced profile state to server codebase');
         }
       } catch (err) {
         console.debug('Auto-sync check completed:', err);
@@ -1060,31 +1050,54 @@ export default function App() {
           </span>
         </div>
 
-        {/* Discipline Switcher: VIDEOGRAPHY vs PHOTOGRAPHY */}
-        <div className="px-6 md:px-12 py-3.5 sm:py-4 flex items-center justify-between border-b border-white/[0.06] bg-[#0b0b0b]/60">
-          <div className="flex items-center gap-8 md:gap-14">
-            <button
-              onClick={() => handleSelectCategory('video')}
-              className={`font-serif-garamond text-[26px] sm:text-[34px] md:text-[42px] font-normal cursor-pointer transition-all duration-500 relative pb-1.5 text-left ${
-                activeCategory === 'video'
-                  ? 'text-[#f0ede8] opacity-100 after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-[#f0ede8]/60'
-                  : 'text-[#f0ede8]/30 hover:text-[#f0ede8]/60'
-              }`}
-              id="cat-btn-videography"
-            >
-              Videography
-            </button>
-            <button
-              onClick={() => handleSelectCategory('photo')}
-              className={`font-serif-garamond text-[26px] sm:text-[34px] md:text-[42px] font-normal cursor-pointer transition-all duration-500 relative pb-1.5 text-left ${
-                activeCategory === 'photo'
-                  ? 'text-[#f0ede8] opacity-100 after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-[#f0ede8]/60'
-                  : 'text-[#f0ede8]/30 hover:text-[#f0ede8]/60'
-              }`}
-              id="cat-btn-photography"
-            >
-              Photography
-            </button>
+        {/* Discipline Switcher: Compact Centered Segmented Toggle */}
+        <div className="px-4 sm:px-8 py-5 sm:py-6 border-b border-white/[0.06] bg-[#0b0b0b]/60 flex items-center justify-center">
+          {/* Segmented Switch Container */}
+          <div 
+            id="work-discipline-toggle"
+            role="tablist"
+            aria-label="Select Work Category: Videography or Photography"
+            className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-[#0e0e0e] border border-white/[0.1] rounded-xl p-1 shadow-md"
+          >
+            <div className="grid grid-cols-2 gap-1 sm:gap-1.5">
+              {/* Videography Option Button */}
+              <button
+                type="button"
+                onClick={() => handleSelectCategory('video')}
+                id="cat-btn-videography"
+                role="tab"
+                aria-selected={activeCategory === 'video'}
+                className={`w-full py-2 sm:py-2.5 px-2.5 sm:px-4 rounded-lg flex items-center justify-center gap-1.5 sm:gap-2 transition-colors duration-200 cursor-pointer select-none text-center ${
+                  activeCategory === 'video'
+                    ? 'bg-[#D8C7A5] text-[#141414] border border-[#c2b18f]/40 font-medium'
+                    : 'bg-[#141414] text-[#8e8a82] border border-white/[0.08] hover:bg-[#1a1a1a] hover:text-[#d6d3cc] hover:border-white/[0.14] font-normal'
+                }`}
+              >
+                <Video className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${activeCategory === 'video' ? 'text-[#141414]' : 'text-[#8e8a82]'}`} />
+                <span className="text-[11px] sm:text-[12px] tracking-[0.16em] uppercase font-sans">
+                  Videography
+                </span>
+              </button>
+
+              {/* Photography Option Button */}
+              <button
+                type="button"
+                onClick={() => handleSelectCategory('photo')}
+                id="cat-btn-photography"
+                role="tab"
+                aria-selected={activeCategory === 'photo'}
+                className={`w-full py-2 sm:py-2.5 px-2.5 sm:px-4 rounded-lg flex items-center justify-center gap-1.5 sm:gap-2 transition-colors duration-200 cursor-pointer select-none text-center ${
+                  activeCategory === 'photo'
+                    ? 'bg-[#D8C7A5] text-[#141414] border border-[#c2b18f]/40 font-medium'
+                    : 'bg-[#141414] text-[#8e8a82] border border-white/[0.08] hover:bg-[#1a1a1a] hover:text-[#d6d3cc] hover:border-white/[0.14] font-normal'
+                }`}
+              >
+                <Image className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${activeCategory === 'photo' ? 'text-[#141414]' : 'text-[#8e8a82]'}`} />
+                <span className="text-[11px] sm:text-[12px] tracking-[0.16em] uppercase font-sans">
+                  Photography
+                </span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1112,233 +1125,297 @@ export default function App() {
       </section>
 
       {/* ── ABOUT SECTION ────────────────────────────── */}
-      <section id="about" className="py-24 md:py-36 px-6 md:px-12 border-t border-white/[0.06] bg-[#0c0c0c]/80">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start max-w-7xl mx-auto">
+      <section id="about" className="py-20 md:py-32 px-6 md:px-12 border-t border-white/[0.06] bg-[#0c0c0c]/80">
+        <div className="max-w-7xl mx-auto space-y-14 md:space-y-18">
           
-          {/* Portrait Column */}
-          <div className="lg:col-span-5">
-            {/* Hidden Native File Input for Portrait (Creator Only) */}
-            {isCreator && (
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                className="hidden"
-                aria-label="Upload profile photograph"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
+          {/* ── TOP ROW: Filmmaker Portrait, Headline & Industry Credentials ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center pb-12 sm:pb-16 border-b border-white/[0.08]">
+            
+            {/* Portrait Column */}
+            <div className="lg:col-span-5 max-w-sm sm:max-w-md mx-auto lg:mx-0 w-full">
+              {/* Hidden Native File Input for Portrait (Creator Only) */}
+              {isCreator && (
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*"
+                  className="hidden"
+                  aria-label="Upload profile photograph"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      processPhotoFile(file);
+                    }
+                  }}
+                />
+              )}
+
+              <div 
+                className={`relative overflow-hidden bg-[#0d0d0d] rounded-2xl border ${
+                  isCreator && isDraggingOver 
+                    ? 'border-[#f0ede8] ring-2 ring-[#f0ede8]/40 shadow-2xl scale-[1.01]' 
+                    : 'border-white/10 shadow-2xl'
+                } group transition-all duration-300 ${isCreator ? 'cursor-pointer' : 'cursor-default'}`}
+                onDragOver={(e) => {
+                  if (!isCreator) return;
+                  e.preventDefault();
+                  setIsDraggingOver(true);
+                }}
+                onDragLeave={(e) => {
+                  if (!isCreator) return;
+                  e.preventDefault();
+                  setIsDraggingOver(false);
+                }}
+                onDrop={(e) => {
+                  if (!isCreator) return;
+                  e.preventDefault();
+                  setIsDraggingOver(false);
+                  const file = e.dataTransfer.files?.[0];
                   if (file) {
                     processPhotoFile(file);
                   }
                 }}
-              />
-            )}
-
-            <div 
-              className={`relative overflow-hidden bg-[#0d0d0d] rounded-2xl border ${
-                isCreator && isDraggingOver 
-                  ? 'border-[#f0ede8] ring-2 ring-[#f0ede8]/40 shadow-2xl scale-[1.01]' 
-                  : 'border-white/10 shadow-2xl'
-              } group transition-all duration-300 ${isCreator ? 'cursor-pointer' : 'cursor-default'}`}
-              onDragOver={(e) => {
-                if (!isCreator) return;
-                e.preventDefault();
-                setIsDraggingOver(true);
-              }}
-              onDragLeave={(e) => {
-                if (!isCreator) return;
-                e.preventDefault();
-                setIsDraggingOver(false);
-              }}
-              onDrop={(e) => {
-                if (!isCreator) return;
-                e.preventDefault();
-                setIsDraggingOver(false);
-                const file = e.dataTransfer.files?.[0];
-                if (file) {
-                  processPhotoFile(file);
-                }
-              }}
-              onClick={() => {
-                if (isCreator) {
-                  fileInputRef.current?.click();
-                }
-              }}
-              title={isCreator ? "Click or drag & drop to update portrait photo" : undefined}
-            >
-              {/* Editorial Profile Photograph — 4:5 vertical portrait */}
-              <img
-                src={customPortrait || CANDIDATE_PORTRAITS[portraitCandidateIndex]}
-                onError={() => {
-                  if (!customPortrait && portraitCandidateIndex < CANDIDATE_PORTRAITS.length - 1) {
-                    setPortraitCandidateIndex(prev => prev + 1);
+                onClick={() => {
+                  if (isCreator) {
+                    fileInputRef.current?.click();
                   }
                 }}
-                alt="Sriram Karthick — DOP, Videographer &amp; Photographer"
-                referrerPolicy="no-referrer"
-                className="w-full aspect-[4/5] object-cover object-center transition-all duration-700 ease-out group-hover:scale-[1.02] group-hover:brightness-[1.03]"
-              />
+                title={isCreator ? "Click or drag & drop to update portrait photo" : undefined}
+              >
+                {/* Editorial Profile Photograph — 4:5 vertical portrait */}
+                <img
+                  src={customPortrait || CANDIDATE_PORTRAITS[portraitCandidateIndex]}
+                  onError={() => {
+                    if (!customPortrait && portraitCandidateIndex < CANDIDATE_PORTRAITS.length - 1) {
+                      setPortraitCandidateIndex(prev => prev + 1);
+                    }
+                  }}
+                  alt="Sriram Karthick — Filmmaker, Cinematographer &amp; Creative Producer"
+                  referrerPolicy="no-referrer"
+                  className="w-full aspect-[4/5] object-cover object-center transition-all duration-700 ease-out group-hover:scale-[1.02] group-hover:brightness-[1.03]"
+                />
 
-              {/* Creator Interactive Hover & Drag Overlay */}
-              {isCreator && (
-                <div className={`absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center gap-2 transition-opacity duration-300 ${
-                  isDraggingOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                }`}>
-                  <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[#f0ede8] shadow-lg">
-                    <Camera className="w-6 h-6" />
+                {/* Creator Interactive Hover & Drag Overlay */}
+                {isCreator && (
+                  <div className={`absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center gap-2 transition-opacity duration-300 ${
+                    isDraggingOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  }`}>
+                    <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[#f0ede8] shadow-lg">
+                      <Camera className="w-6 h-6" />
+                    </div>
+                    <p className="text-xs uppercase tracking-[0.2em] font-medium text-[#f0ede8]">
+                      {isDraggingOver ? 'Drop Portrait Photo Here' : 'Update Portrait Photo'}
+                    </p>
+                    <p className="text-[10px] text-white/50 tracking-wider">
+                      Click or drag &amp; drop your image
+                    </p>
                   </div>
-                  <p className="text-xs uppercase tracking-[0.2em] font-medium text-[#f0ede8]">
-                    {isDraggingOver ? 'Drop Portrait Photo Here' : 'Update Portrait Photo'}
-                  </p>
-                  <p className="text-[10px] text-white/50 tracking-wider">
-                    Click or drag &amp; drop your image
-                  </p>
-                </div>
-              )}
+                )}
 
-              {/* Quick Status Pill in Corner */}
-              {uploadSuccess && (
-                <div className="absolute top-4 right-4 bg-emerald-950/90 border border-emerald-500/40 text-emerald-200 px-3 py-1.5 rounded-full text-xs font-mono tracking-wider flex items-center gap-1.5 shadow-lg backdrop-blur-md animate-in fade-in">
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Photo Updated &amp; Saved</span>
-                </div>
-              )}
-            </div>
+                {/* Quick Status Pill in Corner */}
+                {uploadSuccess && (
+                  <div className="absolute top-4 right-4 bg-emerald-950/90 border border-emerald-500/40 text-emerald-200 px-3 py-1.5 rounded-full text-xs font-mono tracking-wider flex items-center gap-1.5 shadow-lg backdrop-blur-md animate-in fade-in">
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Photo Updated &amp; Saved</span>
+                  </div>
+                )}
+              </div>
 
-            {/* Portrait Management Toolbar (Creator Only) */}
-            {isCreator && (
-              <div className="mt-3 flex items-center justify-between text-xs text-white/50">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-1.5 text-[11px] tracking-wider uppercase text-white/60 hover:text-white transition-colors py-1 px-2.5 rounded-md hover:bg-white/[0.04] border border-white/[0.08]"
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Replace Photo</span>
-                </button>
-
-                {customPortrait && (
+              {/* Portrait Management Toolbar (Creator Only) */}
+              {isCreator && (
+                <div className="mt-3 flex items-center justify-between text-xs text-white/50">
                   <button
                     type="button"
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      setCustomPortrait(null);
-                      setPortraitCandidateIndex(0);
-                      await clearProfilePhotoFromStorage();
-                    }}
-                    className="inline-flex items-center gap-1 text-[10px] tracking-wider uppercase text-white/40 hover:text-rose-300 transition-colors py-1 px-2 rounded-md hover:bg-rose-500/10 cursor-pointer"
-                    title="Revert to original default portrait"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 text-[11px] tracking-wider uppercase text-white/60 hover:text-white transition-colors py-1 px-2.5 rounded-md hover:bg-white/[0.04] border border-white/[0.08]"
                   >
-                    <RotateCcw className="w-3 h-3" />
-                    <span>Reset</span>
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Replace Photo</span>
+                  </button>
+
+                  {customPortrait && (
+                    <button
+                      type="button"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        setCustomPortrait(null);
+                        setPortraitCandidateIndex(0);
+                        await clearProfilePhotoFromStorage();
+                      }}
+                      className="inline-flex items-center gap-1 text-[10px] tracking-wider uppercase text-white/40 hover:text-rose-300 transition-colors py-1 px-2 rounded-md hover:bg-rose-500/10 cursor-pointer"
+                      title="Revert to original default portrait"
+                    >
+                      <RotateCcw className="w-3 h-3" />
+                      <span>Reset</span>
+                    </button>
+                  )}
+                </div>
+              )}
+              
+              {/* Editorial Name & Title Below Portrait */}
+              <div className="mt-5">
+                <a 
+                  href="https://www.linkedin.com/in/sriram-karthick-2250551ab/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="font-serif-garamond text-3xl sm:text-4xl text-[#f0ede8] hover:text-white block leading-tight hover:underline decoration-white/30 underline-offset-4 transition-colors"
+                  title="Sriram Karthick on LinkedIn"
+                >
+                  Sriram Karthick
+                </a>
+                <p className="text-[10px] sm:text-[11px] font-light tracking-[0.24em] uppercase text-white/50 mt-2">
+                  FILMMAKER &nbsp;/&nbsp; CINEMATOGRAPHER &nbsp;/&nbsp; CREATIVE PRODUCER
+                </p>
+              </div>
+            </div>
+
+            {/* Headline & Key Credentials Column */}
+            <div className="lg:col-span-7 flex flex-col justify-center lg:pl-2">
+              <div className="flex items-center justify-between mb-5">
+                <span className="text-[11px] font-light tracking-[0.24em] uppercase text-[#f0ede8]/40 block">
+                  About
+                </span>
+                {isCreator && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAboutDraft(aboutData || defaultPortfolioContent.about);
+                      setIsEditingAbout(true);
+                    }}
+                    className="inline-flex items-center gap-1.5 text-[11px] tracking-wider uppercase text-amber-300 hover:text-white transition-colors py-1 px-2.5 rounded-md bg-white/[0.04] hover:bg-white/[0.08] border border-amber-400/20"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Edit Bio / Text</span>
                   </button>
                 )}
               </div>
-            )}
-            
-            {/* Editorial Name & Title Below Portrait */}
-            <div className="mt-6">
-              <a 
-                href="https://www.linkedin.com/in/sriram-karthick-2250551ab/" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="font-serif-garamond text-3xl sm:text-4xl text-[#f0ede8] hover:text-white block leading-tight hover:underline decoration-white/30 underline-offset-4 transition-colors"
-                title="Sriram Karthick on LinkedIn"
-              >
-                Sriram Karthick
-              </a>
-              <p className="text-[10px] sm:text-[11px] font-light tracking-[0.24em] uppercase text-white/50 mt-2">
-                DOP &nbsp;/&nbsp; VIDEOGRAPHER &nbsp;/&nbsp; PHOTOGRAPHER
-              </p>
+              
+              <h2 className="font-serif-garamond text-[32px] sm:text-[42px] md:text-[48px] lg:text-[52px] font-normal leading-[1.14] tracking-[-0.015em] text-[#f0ede8] mb-8">
+                {aboutData?.headline || "I build visual stories from the first idea to the final frame."}
+              </h2>
+
+              {/* Quick Stats Grid: Dynamic from aboutData */}
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 text-center">
+                {(aboutData?.stats || [
+                  { value: "7+", label: "Years of Experience" },
+                  { value: "40+", label: "Brands Worked With" },
+                  { value: "100+", label: "Clients Worldwide" }
+                ]).map((stat: any, idx: number) => (
+                  <div key={idx} className="py-5 px-3 bg-white/[0.02] border border-white/[0.08] text-center flex flex-col items-center justify-center rounded-xl">
+                    <span className="font-serif-garamond text-2xl sm:text-3xl lg:text-4xl text-[#f0ede8] block mb-1.5 font-normal">
+                      {stat.value}
+                    </span>
+                    <span className="text-[9px] sm:text-[10px] tracking-[0.18em] uppercase text-white/45 leading-[1.35] block">
+                      {stat.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-            
-            {/* Quick Stats Grid: Dynamic from aboutData */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-6 text-center">
-              {(aboutData?.stats || [
-                { value: "7+", label: "Years of Experience" },
-                { value: "40+", label: "Brands Worked With" },
-                { value: "100+", label: "Clients Worldwide" }
-              ]).map((stat: any, idx: number) => (
-                <div key={idx} className="py-5 px-3 bg-white/[0.02] border border-white/[0.08] text-center flex flex-col items-center justify-center">
-                  <span className="font-serif-garamond text-2xl sm:text-3xl lg:text-4xl text-[#f0ede8] block mb-1.5 font-normal">
-                    {stat.value}
-                  </span>
-                  <span className="text-[9px] sm:text-[10px] tracking-[0.18em] uppercase text-white/45 leading-[1.35] block">
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
-            </div>
+
           </div>
 
-          {/* Bio & Tools Column */}
-          <div className="lg:col-span-7 lg:pt-2">
-            <div className="flex items-center justify-between mb-5">
-              <span className="text-[11px] font-light tracking-[0.24em] uppercase text-[#f0ede8]/40 block">
-                About
-              </span>
-              {isCreator && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAboutDraft(aboutData || defaultPortfolioContent.about);
-                    setIsEditingAbout(true);
-                  }}
-                  className="inline-flex items-center gap-1.5 text-[11px] tracking-wider uppercase text-amber-300 hover:text-white transition-colors py-1 px-2.5 rounded-md bg-white/[0.04] hover:bg-white/[0.08] border border-amber-400/20"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Edit Bio / Text</span>
-                </button>
-              )}
-            </div>
+          {/* ── LOWER ROW: Main About Description & Production Capabilities ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             
-            <h2 className="font-serif-garamond text-[32px] sm:text-[40px] md:text-[48px] lg:text-[54px] font-normal leading-[1.16] tracking-[-0.015em] text-[#f0ede8] mb-8">
-              {aboutData?.headline || "I tell stories through light, movement and real moments."}
-            </h2>
-
-            <div className="space-y-6 text-[#f0ede8]/65 text-[14px] sm:text-[15px] md:text-[16px] leading-[1.85] font-light mb-10">
-              {aboutData?.paragraphs && aboutData.paragraphs.length > 0 ? (
-                aboutData.paragraphs.map((p: string, idx: number) => (
-                  <p key={idx}>{p}</p>
-                ))
-              ) : (
-                <>
-                  <p>
-                    I’m a cinematographer, videographer and photographer with over 7 years of experience crafting visuals for brands, artists and businesses. I work across commercials, brand films, product videos, live events and personal projects — always with a focus on strong visual storytelling and intentional, cinematic imagery.
-                  </p>
-                  <p>
-                    From the first idea to the final frame, I bring a collaborative and detail-oriented approach to every project. Whether it’s a high-energy commercial, a documentary-style film or a simple product shoot, my goal is the same — to create visuals that feel authentic, memorable and aligned with your story.
-                  </p>
-                  <p>
-                    I’m comfortable working across different scales — from independent projects to large-scale productions — and I adapt to the needs of each project, bringing a mix of technical expertise, creative instinct and reliability on set.
-                  </p>
-                  <p>
-                    If you’re looking for a DOP, videographer or photographer who can understand your vision and bring it to life with a cinematic, honest and compelling visual language, let’s create something together.
-                  </p>
-                </>
-              )}
+            {/* Primary Column: Main About Description */}
+            <div className="lg:col-span-7 space-y-5">
+              <span className="text-[10.5px] sm:text-[11px] font-mono tracking-[0.22em] uppercase text-white/40 block mb-3">
+                Background &amp; Storytelling Approach
+              </span>
+              <div className="space-y-6 text-[#f0ede8]/70 text-[14px] sm:text-[15px] md:text-[16px] leading-[1.85] font-light">
+                {aboutData?.paragraphs && aboutData.paragraphs.length > 0 ? (
+                  aboutData.paragraphs.map((p: string, idx: number) => (
+                    <p key={idx}>{p}</p>
+                  ))
+                ) : (
+                  <>
+                    <p>
+                      I'm a filmmaker, cinematographer and creative producer with over 7 years of experience developing and producing visual stories for brands, businesses and people.
+                    </p>
+                    <p>
+                      My work spans commercials, brand films, documentaries, product films, events and photography. I approach every project through the lens of storytelling, combining creative direction, visual craft and practical production thinking.
+                    </p>
+                    <p>
+                      From shaping an initial concept and planning the shoot to working with teams on set and refining the final edit, I enjoy being involved in the complete creative process.
+                    </p>
+                    <p>
+                      Whether it's a large-scale production or a focused visual project, my goal is to create work that is purposeful, cinematic and connected to the audience.
+                    </p>
+                    <p>
+                      I collaborate with brands, agencies and creative teams to develop ideas into meaningful visual experiences.
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
 
-            {/* Tools & Production Expertise Box */}
-            <div className="p-6 sm:p-7 bg-[#0e0e0e] border border-white/[0.08] rounded-xl space-y-4">
-              <span className="text-[10px] sm:text-[11px] font-medium tracking-[0.22em] uppercase text-white/40 block">
-                Tools &amp; Production Expertise
-              </span>
-              <div className="flex flex-wrap gap-2.5">
-                {(aboutData?.tools || [
-                  "ARRI Alexa Mini LF",
-                  "Sony FX3 / FX6 / FX9",
-                  "Event DOP",
-                  "Production",
-                  "Gimbal Operator",
-                  "DaVinci Resolve Grading",
-                  "Pre-Production",
-                  "Post-Production"
-                ]).map((tool: string, idx: number) => (
-                  <span key={idx} className="px-4 py-2.5 bg-[#171717] border border-white/[0.08] text-white/80 text-[12px] sm:text-[13px] rounded-lg tracking-wide hover:border-white/20 transition-colors">
-                    {tool}
+            {/* Secondary Column: Production & Creative Capabilities Box */}
+            <div className="lg:col-span-5">
+              <div className="p-6 sm:p-8 bg-[#0e0e0e] border border-white/[0.08] rounded-xl space-y-6">
+                <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                  <span className="text-[10px] sm:text-[11px] font-medium tracking-[0.22em] uppercase text-white/50 block">
+                    Production &amp; Creative Capabilities
                   </span>
-                ))}
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#D8C7A5]/70" />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6 pt-1">
+                  {(aboutData?.capabilityGroups || defaultPortfolioContent.about?.capabilityGroups || [
+                    {
+                      category: "Creative & Direction",
+                      items: [
+                        "Concept Development",
+                        "Creative Direction",
+                        "Pre-Production",
+                        "Shoot Planning"
+                      ]
+                    },
+                    {
+                      category: "Production",
+                      items: [
+                        "Cinematography & Camera Operation",
+                        "ARRI Alexa Mini LF",
+                        "Sony FX3 / FX6 / FX9",
+                        "Gimbal Operator",
+                        "On-Set Production & Crew Direction"
+                      ]
+                    },
+                    {
+                      category: "Post-Production",
+                      items: [
+                        "DaVinci Resolve Grading",
+                        "Post-Production Supervision",
+                        "Final Edit Refinement"
+                      ]
+                    },
+                    {
+                      category: "Photography",
+                      items: [
+                        "Commercial & Brand Stills",
+                        "Editorial & Portrait Photography",
+                        "Event Coverage"
+                      ]
+                    }
+                  ]).map((group: any, gIdx: number) => (
+                    <div key={gIdx} className="space-y-2.5">
+                      <h4 className="text-[10.5px] sm:text-[11px] font-mono font-medium tracking-[0.18em] uppercase text-white/60 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                        {group.category}
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {group.items.map((item: string, iIdx: number) => (
+                          <span 
+                            key={iIdx} 
+                            className="px-3 py-1.5 bg-[#161616] border border-white/[0.07] text-white/75 text-[11px] sm:text-[12px] rounded-lg tracking-wide hover:border-white/20 transition-colors"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -1910,7 +1987,7 @@ export default function App() {
 
               <div>
                 <label className="block text-[10px] uppercase tracking-wider text-white/50 mb-1">
-                  Tools &amp; Production Expertise (comma separated)
+                  Production &amp; Creative Capabilities (comma separated)
                 </label>
                 <input 
                   type="text"
