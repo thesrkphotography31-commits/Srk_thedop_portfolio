@@ -37,8 +37,8 @@
   },
   "photos": [
     {
-      "id": "photo-import-1788974907125-0-wqjlp",
-      "imageUrl": "/photos/photo-import-1788974907125-0-wqjlp.jpg",
+      "id": "photo-01",
+      "imageUrl": "/photos/photo-01.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
@@ -48,8 +48,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788974907657-1-vnrai",
-      "imageUrl": "/photos/photo-import-1788974907657-1-vnrai.jpg",
+      "id": "photo-02",
+      "imageUrl": "/photos/photo-02.jpg",
       "aspect": "2/3",
       "width": 1707,
       "height": 2560,
@@ -59,8 +59,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788974821098-0-z94rf",
-      "imageUrl": "/photos/photo-import-1788974821098-0-z94rf.jpg",
+      "id": "photo-03",
+      "imageUrl": "/photos/photo-03.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
@@ -70,8 +70,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788974821832-1-a0qg1",
-      "imageUrl": "/photos/photo-import-1788974821832-1-a0qg1.jpg",
+      "id": "photo-04",
+      "imageUrl": "/photos/photo-04.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
@@ -81,8 +81,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788974775426-0-3relf",
-      "imageUrl": "/photos/photo-import-1788974775426-0-3relf.jpg",
+      "id": "photo-05",
+      "imageUrl": "/photos/photo-05.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1710,
@@ -92,8 +92,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788974755331-0-a4ap5",
-      "imageUrl": "/photos/photo-import-1788974755331-0-a4ap5.jpg",
+      "id": "photo-06",
+      "imageUrl": "/photos/photo-06.jpg",
       "aspect": "2/3",
       "width": 1707,
       "height": 2560,
@@ -103,8 +103,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935845292-0-2v4ka",
-      "imageUrl": "/photos/photo-import-1788935845292-0-2v4ka.jpg",
+      "id": "photo-07",
+      "imageUrl": "/photos/photo-07.jpg",
       "aspect": "3/4",
       "width": 1240,
       "height": 1550,
@@ -114,8 +114,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935845405-1-le0jb",
-      "imageUrl": "/photos/photo-import-1788935845405-1-le0jb.jpg",
+      "id": "photo-08",
+      "imageUrl": "/photos/photo-08.jpg",
       "aspect": "4/3",
       "width": 1400,
       "height": 1066,
@@ -125,8 +125,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935845539-2-782fz",
-      "imageUrl": "/photos/photo-import-1788935845539-2-782fz.jpg",
+      "id": "photo-09",
+      "imageUrl": "/photos/photo-09.jpg",
       "aspect": "2/3",
       "width": 1068,
       "height": 1600,
@@ -136,8 +136,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935845831-3-5gbdy",
-      "imageUrl": "/photos/photo-import-1788935845831-3-5gbdy.jpg",
+      "id": "photo-10",
+      "imageUrl": "/photos/photo-10.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1706,
@@ -147,8 +147,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935846302-4-vuzkg",
-      "imageUrl": "/photos/photo-import-1788935846302-4-vuzkg.jpg",
+      "id": "photo-11",
+      "imageUrl": "/photos/photo-11.jpg",
       "aspect": "2/3",
       "width": 1440,
       "height": 2560,
@@ -158,8 +158,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935847077-5-0pj64",
-      "imageUrl": "/photos/photo-import-1788935847077-5-0pj64.jpg",
+      "id": "photo-12",
+      "imageUrl": "/photos/photo-12.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
@@ -169,8 +169,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935847200-6-q76ej",
-      "imageUrl": "/photos/photo-import-1788935847200-6-q76ej.jpg",
+      "id": "photo-13",
+      "imageUrl": "/photos/photo-13.jpg",
       "aspect": "3/2",
       "width": 1400,
       "height": 934,
@@ -180,8 +180,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935847861-7-r37hh",
-      "imageUrl": "/photos/photo-import-1788935847861-7-r37hh.jpg",
+      "id": "photo-14",
+      "imageUrl": "/photos/photo-14.jpg",
       "aspect": "3/4",
       "width": 2048,
       "height": 2560,
@@ -191,8 +191,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935848566-8-nw758",
-      "imageUrl": "/photos/photo-import-1788935848566-8-nw758.jpg",
+      "id": "photo-15",
+      "imageUrl": "/photos/photo-15.jpg",
       "aspect": "2/3",
       "width": 1707,
       "height": 2560,
@@ -202,8 +202,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935849654-9-wm1np",
-      "imageUrl": "/photos/photo-import-1788935849654-9-wm1np.jpg",
+      "id": "photo-16",
+      "imageUrl": "/photos/photo-16.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
@@ -213,8 +213,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935850473-10-folm4",
-      "imageUrl": "/photos/photo-import-1788935850473-10-folm4.jpg",
+      "id": "photo-17",
+      "imageUrl": "/photos/photo-17.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
@@ -224,8 +224,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935851343-11-uznw3",
-      "imageUrl": "/photos/photo-import-1788935851343-11-uznw3.jpg",
+      "id": "photo-18",
+      "imageUrl": "/photos/photo-18.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
@@ -235,8 +235,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935851495-12-h98b7",
-      "imageUrl": "/photos/photo-import-1788935851495-12-h98b7.jpg",
+      "id": "photo-19",
+      "imageUrl": "/photos/photo-19.jpg",
       "aspect": "3/4",
       "width": 1240,
       "height": 1550,
@@ -246,8 +246,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935852041-13-39vin",
-      "imageUrl": "/photos/photo-import-1788935852041-13-39vin.jpg",
+      "id": "photo-20",
+      "imageUrl": "/photos/photo-20.jpg",
       "aspect": "4/3",
       "width": 2560,
       "height": 2048,
@@ -257,8 +257,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935852564-14-qyid1",
-      "imageUrl": "/photos/photo-import-1788935852564-14-qyid1.jpg",
+      "id": "photo-21",
+      "imageUrl": "/photos/photo-21.jpg",
       "aspect": "4/3",
       "width": 2560,
       "height": 2048,
@@ -268,8 +268,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935853108-15-eg552",
-      "imageUrl": "/photos/photo-import-1788935853108-15-eg552.jpg",
+      "id": "photo-22",
+      "imageUrl": "/photos/photo-22.jpg",
       "aspect": "4/3",
       "width": 2560,
       "height": 2048,
@@ -279,8 +279,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935853611-16-t77p7",
-      "imageUrl": "/photos/photo-import-1788935853611-16-t77p7.jpg",
+      "id": "photo-23",
+      "imageUrl": "/photos/photo-23.jpg",
       "aspect": "4/3",
       "width": 2560,
       "height": 2048,
@@ -290,8 +290,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935854237-17-5t04u",
-      "imageUrl": "/photos/photo-import-1788935854237-17-5t04u.jpg",
+      "id": "photo-24",
+      "imageUrl": "/photos/photo-24.jpg",
       "aspect": "4/3",
       "width": 2560,
       "height": 2048,
@@ -301,8 +301,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935854738-18-yhms8",
-      "imageUrl": "/photos/photo-import-1788935854738-18-yhms8.jpg",
+      "id": "photo-25",
+      "imageUrl": "/photos/photo-25.jpg",
       "aspect": "2/3",
       "width": 1707,
       "height": 2560,
@@ -312,8 +312,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935855321-19-1y1do",
-      "imageUrl": "/photos/photo-import-1788935855321-19-1y1do.jpg",
+      "id": "photo-26",
+      "imageUrl": "/photos/photo-26.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
@@ -323,8 +323,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935855843-20-l0m0b",
-      "imageUrl": "/photos/photo-import-1788935855843-20-l0m0b.jpg",
+      "id": "photo-27",
+      "imageUrl": "/photos/photo-27.jpg",
       "aspect": "3/2",
       "width": 2560,
       "height": 1707,
@@ -334,8 +334,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935855943-21-2d6fn",
-      "imageUrl": "/photos/photo-import-1788935855943-21-2d6fn.jpg",
+      "id": "photo-28",
+      "imageUrl": "/photos/photo-28.jpg",
       "aspect": "1/1",
       "width": 1080,
       "height": 1080,
@@ -345,8 +345,8 @@
       "dominantColor": "#9e8574"
     },
     {
-      "id": "photo-import-1788935856269-22-abp24",
-      "imageUrl": "/photos/photo-import-1788935856269-22-abp24.jpg",
+      "id": "photo-29",
+      "imageUrl": "/photos/photo-29.jpg",
       "aspect": "2/3",
       "width": 1440,
       "height": 2560,
