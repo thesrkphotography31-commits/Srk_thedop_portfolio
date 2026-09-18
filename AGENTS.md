@@ -16,9 +16,14 @@ This file locks in the user-approved milestone version, architectural decisions,
 - **Discipline Typography**:
   - "Videography" and "Photography" category switcher headers must use matching, non-italicized classical serif typography (EB Garamond), optical weights, and active underline indicators.
 
-- **Videography Presentation (Clean Title & Film Mandate)**:
-  - Video cards and the screening modal display strictly the name of the video and the film itself.
+- **Videography Presentation (Inline Playback & Clean Title Mandate)**:
+  - Video cards display strictly the name of the video and the film itself.
   - All descriptions, roles, client metadata, discipline tags, and location badges are permanently removed.
+  - Clicking any video card, thumbnail, or play button replaces the thumbnail with an embedded responsive video player directly in the same card (no external tabs, windows, or external modals).
+  - Standard player controls (play/pause, volume, fullscreen, scrubber) are active.
+  - A prominent "Close Player" / Stop button allows returning to the thumbnail poster anytime.
+  - Only one video plays at a time; starting a new video automatically stops any previous video.
+  - If third-party embedding is restricted by YouTube, a clear in-card notice is displayed with an option to view on YouTube and return to thumbnail.
 
 - **Photography Presentation (Clean Frame Mandate)**:
   - **No bottom corner overlays**: The technical aspect ratio badge (e.g. `16:9 Cinema`) and mood label (e.g. `Golden Hour`) in the bottom corners are permanently removed.

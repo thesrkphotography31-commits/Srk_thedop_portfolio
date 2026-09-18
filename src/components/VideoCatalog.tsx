@@ -14,7 +14,10 @@ import {
   ExternalLink,
   Layers,
   Filter,
-  Upload
+  Upload,
+  X,
+  Square,
+  AlertCircle
 } from 'lucide-react';
 import { getProjectVideoUrl, saveProjectVideoFile } from '../utils/videoStorage';
 
@@ -90,10 +93,34 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
   const [previewMode, setPreviewMode] = useState<VideoPreviewMode>('poster');
   const [categoryFilter, setCategoryFilter] = useState<VideoCategoryFilter>('all');
   const [inlinePlayingId, setInlinePlayingId] = useState<string | null>(null);
+  const [embedFailedIds, setEmbedFailedIds] = useState<Set<string>>(new Set());
 
   const [customVideoUrls, setCustomVideoUrls] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeUploadId, setActiveUploadId] = useState<string | null>(null);
+
+  // Listen for YouTube player error events (e.g. error 101/150 for embedding disabled)
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        let data = event.data;
+        if (typeof data === 'string') {
+          try {
+            data = JSON.parse(data);
+          } catch {
+            return;
+          }
+        }
+        if (data && (data.event === 'onError' || (data.info && [100, 101, 150].includes(Number(data.info))))) {
+          if (inlinePlayingId) {
+            setEmbedFailedIds(prev => new Set(prev).add(inlinePlayingId));
+          }
+        }
+      } catch {}
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [inlinePlayingId]);
 
   useEffect(() => {
     let isMounted = true;
@@ -541,34 +568,36 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
           const hasVideoSrc = Boolean(activeVideoSrc);
           const externalUrl = video.videoUrl || (video.youtubeId ? `https://www.youtube.com/watch?v=${video.youtubeId}` : video.youtubeUrl);
           const hasExternalUrl = Boolean(externalUrl && externalUrl.trim().length > 0);
-          const canEmbed = (video.allowsEmbed !== false && Boolean(video.youtubeId)) || hasVideoSrc;
-          const isDirect = (previewMode === 'direct' && canEmbed) || (inlinePlayingId === video.id && canEmbed);
+
+          const isPlaying = inlinePlayingId === video.id;
+          const isEmbedFailed = embedFailedIds.has(video.id);
+
           const isSheen = previewMode === 'ambient-sheen';
           const glowColor = CATEGORY_META[video.category]?.glow || 'rgba(245, 158, 11, 0.15)';
           const aspectClass = video.aspect === '21/8' 
             ? (layoutMode === 'cinema' ? 'aspect-[21/8]' : 'aspect-[16/9]')
             : 'aspect-video';
 
-          const handleCardClick = () => {
-            if (video.id === 'virdas-tour' || video.id === 'alan-walker-kingfisher') {
-              const url = video.videoUrl || (video.youtubeId ? `https://youtu.be/${video.youtubeId}` : 'https://youtu.be/chfwqrpuYM0');
-              const a = document.createElement('a');
-              a.href = url;
-              a.target = '_blank';
-              a.rel = 'noopener noreferrer';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              return;
-            }
-            if (canEmbed) {
-              setInlinePlayingId(video.id);
-            } else {
-              onSelectVideo({
-                ...video,
-                videoSrc: activeVideoSrc
-              });
-            }
+          const handlePlayVideo = () => {
+            if (inlinePlayingId === video.id) return;
+            setInlinePlayingId(video.id);
+          };
+
+          const handleStopVideo = () => {
+            setInlinePlayingId(null);
+          };
+
+          const handleReportRestricted = () => {
+            setEmbedFailedIds(prev => new Set(prev).add(video.id));
+          };
+
+          const handleRetryEmbed = () => {
+            setEmbedFailedIds(prev => {
+              const next = new Set(prev);
+              next.delete(video.id);
+              return next;
+            });
+            setInlinePlayingId(video.id);
           };
 
           return (
@@ -598,64 +627,127 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                   />
                 )}
 
-                {/* Direct Video Embed (HTML5 video for videoSrc, or YouTube iframe) */}
-                {isDirect ? (
-                  <div className="relative w-full h-full bg-black">
-                    {hasVideoSrc ? (
-                      <video
-                        src={activeVideoSrc}
-                        controls
-                        playsInline
-                        autoPlay={inlinePlayingId === video.id}
-                        poster={getPosterUrl(video)}
-                        className="absolute inset-0 w-full h-full object-cover z-10 bg-black"
-                      />
-                    ) : video.youtubeId ? (
-                      <iframe
-                        src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&rel=0&modestbranding=1&color=white`}
-                        className="absolute inset-0 w-full h-full border-none z-10"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                        title={`${video.title} — Sriram Karthick`}
-                      />
-                    ) : null}
+                {/* Direct Inline Video Embed or Fallback */}
+                {isPlaying ? (
+                  isEmbedFailed ? (
+                    /* Fallback Message when embedding is disabled/restricted */
+                    <div className="absolute inset-0 z-20 bg-[#0c0c0c] border border-amber-400/20 p-6 flex flex-col items-center justify-center text-center">
+                      <div className="w-12 h-12 rounded-full bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 mb-3 shadow-lg">
+                        <AlertCircle className="w-6 h-6" />
+                      </div>
+                      <span className="text-[10px] uppercase font-mono tracking-[0.2em] text-amber-400/90 mb-1">
+                        Notice · External Playback Required
+                      </span>
+                      <h4 className="font-serif-garamond text-xl sm:text-2xl text-white font-normal mb-2">
+                        Embedding Restricted by Video Owner
+                      </h4>
+                      <p className="text-xs text-white/60 max-w-sm mb-5 leading-relaxed">
+                        This video publisher has restricted playback on third-party websites. You can watch the full film directly on YouTube.
+                      </p>
+                      <div className="flex flex-wrap items-center justify-center gap-3">
+                        {hasExternalUrl && (
+                          <a
+                            href={externalUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-400 hover:bg-amber-300 text-black text-xs uppercase tracking-wider font-semibold transition-all shadow-lg shadow-amber-400/20 cursor-pointer"
+                          >
+                            <span>Watch on YouTube</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        <button
+                          type="button"
+                          onClick={handleRetryEmbed}
+                          className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white text-xs uppercase tracking-wider transition-colors border border-white/15 cursor-pointer"
+                        >
+                          Try Player Again
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleStopVideo}
+                          className="px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                        >
+                          Return to Thumbnail
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Active Embedded Video Player with standard controls */
+                    <div className="relative w-full h-full bg-black">
+                      {hasVideoSrc ? (
+                        <video
+                          src={activeVideoSrc}
+                          controls
+                          autoPlay
+                          playsInline
+                          poster={getPosterUrl(video)}
+                          className="absolute inset-0 w-full h-full object-cover z-10 bg-black"
+                        />
+                      ) : video.youtubeId ? (
+                        <iframe
+                          src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&controls=1&enablejsapi=1&rel=0&modestbranding=1&playsinline=1`}
+                          className="absolute inset-0 w-full h-full border-none z-10"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                          allowFullScreen
+                          title={`${video.title} — Sriram Karthick`}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 z-20 bg-[#0c0c0c] p-6 flex flex-col items-center justify-center text-center">
+                          <Film className="w-8 h-8 text-amber-400 mb-3" />
+                          <h4 className="font-serif-garamond text-xl text-white mb-2">{video.title}</h4>
+                          <p className="text-xs text-white/60 max-w-sm mb-4">No embedded video source available for this item.</p>
+                          {hasExternalUrl && (
+                            <a
+                              href={externalUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-amber-400 text-black text-xs font-semibold rounded-full uppercase tracking-wider"
+                            >
+                              <span>Open Original Link</span>
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          )}
+                        </div>
+                      )}
 
-                    {/* Quick controls when playing inline */}
-                    {inlinePlayingId === video.id && (
+                      {/* Top Right Stop / Close Player Button */}
                       <div className="absolute top-3 right-3 z-30 flex items-center gap-2">
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            onSelectVideo({
-                              ...video,
-                              videoSrc: activeVideoSrc
-                            });
+                            handleStopVideo();
                           }}
-                          className="px-2.5 py-1 rounded bg-black/80 hover:bg-amber-400 hover:text-black text-white/90 border border-white/20 hover:border-amber-400 text-[10px] font-mono tracking-wider backdrop-blur-md transition-colors cursor-pointer flex items-center gap-1 shadow-lg"
-                          title="Expand into theater modal"
+                          className="px-3 py-1.5 rounded-full bg-black/85 hover:bg-white hover:text-black text-white/90 border border-white/20 text-[10px] font-mono tracking-wider backdrop-blur-md transition-all cursor-pointer shadow-xl flex items-center gap-1.5"
+                          title="Stop video & return to thumbnail"
+                          aria-label="Stop video and return to thumbnail"
                         >
-                          <Maximize2 className="w-3 h-3" />
-                          <span>Expand</span>
+                          <X className="w-3.5 h-3.5 text-amber-400 group-hover:text-black" />
+                          <span>Close Player</span>
                         </button>
+                      </div>
+
+                      {/* Discreet fallback trigger if user encounters YouTube restriction */}
+                      {video.youtubeId && (
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setInlinePlayingId(null);
+                            handleReportRestricted();
                           }}
-                          className="px-2.5 py-1 rounded bg-black/80 hover:bg-white hover:text-black text-white/90 border border-white/20 text-[10px] font-mono tracking-wider backdrop-blur-md transition-colors cursor-pointer shadow-lg"
-                          title="Close player & restore poster"
+                          className="absolute bottom-2 left-2 z-30 opacity-30 hover:opacity-100 transition-opacity text-[9px] font-mono text-white/70 bg-black/80 hover:bg-black px-2 py-0.5 rounded border border-white/10 cursor-pointer"
+                          title="If playback is restricted by YouTube, switch to direct link fallback"
                         >
-                          ✕ Close
+                          Playback restricted?
                         </button>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  )
                 ) : (
-                  /* Video Poster Card */
+                  /* Video Poster Thumbnail Card */
                   <div
-                    onClick={handleCardClick}
+                    onClick={handlePlayVideo}
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={(e) => {
                       e.preventDefault();
@@ -705,13 +797,7 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (video.id === 'virdas-tour' || video.id === 'alan-walker-kingfisher') {
-                            handleCardClick();
-                          } else if (canEmbed) {
-                            setInlinePlayingId(video.id);
-                          } else {
-                            handleCardClick();
-                          }
+                          handlePlayVideo();
                         }}
                         className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-black/60 backdrop-blur-md border border-white/25 flex items-center justify-center text-white hover:scale-110 group-hover/poster:scale-110 hover:bg-amber-400 group-hover/poster:bg-amber-400 hover:text-black group-hover/poster:text-black hover:border-amber-400 group-hover/poster:border-amber-400 transition-all duration-300 shadow-2xl cursor-pointer"
                         title={`Play ${video.title}`}
@@ -725,7 +811,7 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleCardClick();
+                        handlePlayVideo();
                       }}
                       className="absolute bottom-3 right-3 z-20 opacity-0 group-hover/poster:opacity-100 transition-opacity duration-300 flex items-center gap-1.5 px-3 py-1.5 bg-black/90 backdrop-blur-md rounded-full border border-white/25 text-[9px] uppercase tracking-widest text-amber-300 font-mono shadow-lg hover:bg-amber-400 hover:text-black cursor-pointer"
                     >
@@ -757,25 +843,43 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                 <div className="flex-1 min-w-0">
                   <button
                     type="button"
-                    onClick={handleCardClick}
-                    className="text-left group/title inline-flex items-center gap-2 text-[#f0ede8] hover:text-amber-300 transition-colors cursor-pointer"
+                    onClick={isPlaying ? handleStopVideo : handlePlayVideo}
+                    className="text-left group/title inline-flex items-center gap-2.5 text-[#f0ede8] hover:text-amber-300 transition-colors cursor-pointer"
                   >
                     <h3 className="font-serif-garamond text-2xl sm:text-3xl font-normal leading-tight group-hover/title:text-amber-300 transition-colors">
                       {video.title} {video.highlight && <span className="italic">{video.highlight}</span>}
                     </h3>
+                    {isPlaying && (
+                      <span className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-400/15 border border-amber-400/30 text-[9px] text-amber-300 font-mono uppercase tracking-wider">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                        Playing
+                      </span>
+                    )}
                   </button>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={handleCardClick}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-white/[0.03] hover:bg-amber-400/20 text-white/60 hover:text-amber-300 border border-white/[0.08] hover:border-amber-400/30 text-[10px] uppercase font-mono tracking-wider transition-colors cursor-pointer"
-                    title={`Play ${video.title}`}
-                  >
-                    <Play className="w-3 h-3 fill-current" />
-                    <span className="hidden sm:inline">Play</span>
-                  </button>
+                  {isPlaying ? (
+                    <button
+                      type="button"
+                      onClick={handleStopVideo}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/20 hover:bg-amber-400 text-amber-300 hover:text-black border border-amber-400/40 text-[10px] uppercase font-mono tracking-wider transition-colors cursor-pointer"
+                      title="Stop playback & return to thumbnail"
+                    >
+                      <Square className="w-2.5 h-2.5 fill-current" />
+                      <span>Stop</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handlePlayVideo}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white/[0.03] hover:bg-amber-400/20 text-white/60 hover:text-amber-300 border border-white/[0.08] hover:border-amber-400/30 text-[10px] uppercase font-mono tracking-wider transition-colors cursor-pointer"
+                      title={`Play ${video.title} inline`}
+                    >
+                      <Play className="w-3 h-3 fill-current" />
+                      <span className="hidden sm:inline">Play</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
