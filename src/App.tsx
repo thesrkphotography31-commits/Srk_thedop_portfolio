@@ -202,7 +202,7 @@ const VIDEO_PROJECTS: VideoProject[] = [
     category: 'event',
     youtubeId: 'eLAbF6DWp8A',
     videoUrl: 'https://youtu.be/eLAbF6DWp8A',
-    thumbnail: 'https://img.youtube.com/vi/eLAbF6DWp8A/sddefault.jpg',
+    thumbnail: 'https://img.youtube.com/vi/eLAbF6DWp8A/hqdefault.jpg',
     aspect: '16/9',
     role: 'Cinematographer',
     client: 'Vir Das',

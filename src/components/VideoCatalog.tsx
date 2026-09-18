@@ -72,7 +72,7 @@ const FALLBACK_POSTERS: Record<string, string> = {
   'salesforce-event': 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80',
   'hdfc-ergo': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
   'digiyatra-podcast': 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80',
-  'virdas-tour': '/virdas-youtube-thumbnail.jpg',
+  'virdas-tour': 'https://img.youtube.com/vi/eLAbF6DWp8A/hqdefault.jpg',
   'alan-walker-kingfisher': '/alan-walker-kingfisher.jpg',
   'prestige-cookware': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80',
   'fixderma-product': 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=80',
@@ -241,7 +241,7 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
   // Helper to get poster image
   const getPosterUrl = (video: VideoProject) => {
     if (video.id === 'virdas-tour') {
-      return video.thumbnail || 'https://img.youtube.com/vi/eLAbF6DWp8A/sddefault.jpg';
+      return video.thumbnail || 'https://img.youtube.com/vi/eLAbF6DWp8A/hqdefault.jpg';
     }
     if (video.id === 'alan-walker-kingfisher') {
       return video.thumbnail || 'https://img.youtube.com/vi/chfwqrpuYM0/maxresdefault.jpg';
@@ -767,10 +767,10 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                       onError={(e) => {
                         const target = e.currentTarget;
                         if (video.id === 'virdas-tour') {
-                          if (!target.src.includes('virdas-youtube-thumbnail.jpg')) {
-                            target.src = '/virdas-youtube-thumbnail.jpg';
-                          } else if (!target.src.includes('hqdefault')) {
+                          if (!target.src.includes('hqdefault')) {
                             target.src = 'https://img.youtube.com/vi/eLAbF6DWp8A/hqdefault.jpg';
+                          } else if (!target.src.includes('virdas-youtube-thumbnail.jpg')) {
+                            target.src = '/virdas-youtube-thumbnail.jpg';
                           }
                         } else if (video.id === 'alan-walker-kingfisher') {
                           if (!target.src.includes('alan-walker-kingfisher.jpg')) {
