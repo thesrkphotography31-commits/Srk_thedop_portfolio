@@ -232,21 +232,30 @@ function loadSavedPhotographySettings(): SavedPhotographySettings {
   }
 }
 
+interface LayoutRowItem {
+  photo: CatalogPhoto;
+  originalIndex: number;
+  ratio: number;
+}
+
 interface LayoutRow {
   id: string;
   type: 'landscape-16-9' | 'portraits-row';
-  items: { photo: CatalogPhoto; originalIndex: number }[];
+  items: LayoutRowItem[];
   columns: number;
   aspectClass: string;
+  aspectRatio: number;
   badge: string;
 }
 
 /**
- * Intelligent Layout & Sorting Engine:
- * 1. Landscape photos maintain 16:9 widescreen presentation (aspect-video md:aspect-[16/9]).
- * 2. Vertical photos (9:16, 2:3/3:2, 3:4/4:3) are arranged side-by-side with mathematically
- *    identical heights, even spacing, and even alignment across columns.
- * 3. Supports Neat Aspect Sort (matching formats grouped seamlessly), Newest first, or Rhythmic flow.
+ * Intelligent Editorial Layout Engine:
+ * 1. Landscape photos maintain their original aspect ratio across full available content width without black gaps.
+ * 2. Portrait/vertical photos are automatically paired two across on desktop (or portraitColumns),
+ *    with matched heights, flush edges, and minimal uniform spacing.
+ * 3. An odd final portrait gracefully occupies available space without excessive empty space.
+ * 4. Desktop: landscapes full width; portraits paired two across.
+ *    Mobile: single column with responsive native proportions.
  */
 function buildAdjustableLayout(
   photoList: CatalogPhoto[],
@@ -256,37 +265,26 @@ function buildAdjustableLayout(
 ): LayoutRow[] {
   if (!photoList || photoList.length === 0) return [];
 
-  if (flowStyle === 'widescreen') {
-    return photoList.map((photo, idx) => ({
-      id: `widescreen-${photo.id}-${idx}`,
-      type: 'landscape-16-9',
-      items: [{ photo, originalIndex: idx }],
-      columns: 1,
-      aspectClass: 'aspect-video md:aspect-[16/9]',
-      badge: '16:9 Landscape'
-    }));
-  }
-
-  // 1. Classify photos into landscapes (>= 1.12 aspect) and portraits (< 1.12 aspect)
-  const taggedPhotos = photoList.map((photo, originalIndex) => {
-    let ratio = 1.77;
+  // Helper to compute actual aspect ratio for each photo
+  const taggedPhotos: (LayoutRowItem & { isPortrait: boolean })[] = photoList.map((photo, originalIndex) => {
+    let ratio = 1.777;
     if (photo.width && photo.height && photo.height > 0) {
       ratio = photo.width / photo.height;
     } else {
       switch (photo.aspect) {
-        case '21/9': ratio = 2.33; break;
-        case '16/9': ratio = 1.77; break;
+        case '21/9': ratio = 2.333; break;
+        case '16/9': ratio = 1.777; break;
         case '3/2': ratio = 1.5; break;
-        case '4/3': ratio = 1.33; break;
+        case '4/3': ratio = 1.333; break;
         case '1/1': ratio = 1.0; break;
         case '4/5': ratio = 0.8; break;
         case '3/4': ratio = 0.75; break;
-        case '2/3': ratio = 0.66; break;
-        case '9/16': ratio = 0.56; break;
-        default: ratio = 1.77;
+        case '2/3': ratio = 0.667; break;
+        case '9/16': ratio = 0.562; break;
+        default: ratio = 1.777;
       }
     }
-    const isPortrait = ratio < 1.12;
+    const isPortrait = ratio < 1.05;
     return { photo, originalIndex, ratio, isPortrait };
   });
 
@@ -315,52 +313,77 @@ function buildAdjustableLayout(
       const remaining = total - pIdx;
       const take = Math.min(portraitColumns, remaining);
       const chunk = pList.slice(pIdx, pIdx + take);
+      const avgRatio = chunk.reduce((acc, p) => acc + p.ratio, 0) / chunk.length;
       const { aspectClass, badge } = determineRowAspect(chunk);
       pRows.push({
         id: `portraits-${pIdx}-${chunk[0].photo.id}`,
         type: 'portraits-row',
-        items: chunk.map(p => ({ photo: p.photo, originalIndex: p.originalIndex })),
+        items: chunk.map(p => ({ photo: p.photo, originalIndex: p.originalIndex, ratio: p.ratio })),
         columns: take,
         aspectClass,
-        badge
+        aspectRatio: avgRatio,
+        badge: take > 1 ? 'Paired Diptych' : badge
       });
       pIdx += take;
     }
     return pRows;
   };
 
-  // ── CURATED / PRESERVED ORDER (DEFAULT): Strictly preserve original sequential index arrangement without skipping, swapping, or reordering ──
+  if (flowStyle === 'widescreen') {
+    return taggedPhotos.map((item, idx) => ({
+      id: `widescreen-${item.photo.id}-${idx}`,
+      type: 'landscape-16-9',
+      items: [{ photo: item.photo, originalIndex: item.originalIndex, ratio: item.ratio }],
+      columns: 1,
+      aspectClass: 'aspect-video md:aspect-[16/9]',
+      aspectRatio: item.ratio,
+      badge: '16:9 Landscape'
+    }));
+  }
+
+  // ── CURATED / PRESERVED ORDER (DEFAULT): Strictly preserve original order with automatic portrait pairing ──
   if (sortMode === 'curated') {
     const rows: LayoutRow[] = [];
-    let i = 0;
-    while (i < taggedPhotos.length) {
+    const usedIndices = new Set<number>();
+
+    for (let i = 0; i < taggedPhotos.length; i++) {
+      if (usedIndices.has(i)) continue;
+
       const curr = taggedPhotos[i];
+      usedIndices.add(i);
+
       if (!curr.isPortrait) {
-        // Landscape photo sits full width in 16:9 cinematic aspect in exact sequence
+        // Landscape photo sits full width maintaining its original aspect ratio
         rows.push({
           id: `curated-landscape-${curr.photo.id}-${i}`,
           type: 'landscape-16-9',
-          items: [{ photo: curr.photo, originalIndex: curr.originalIndex }],
+          items: [{ photo: curr.photo, originalIndex: curr.originalIndex, ratio: curr.ratio }],
           columns: 1,
-          aspectClass: 'aspect-video md:aspect-[16/9]',
+          aspectClass: '',
+          aspectRatio: curr.ratio,
           badge: getAspectBadge(curr.photo.aspect, curr.ratio)
         });
-        i++;
       } else {
-        // Adjacent portrait stills in exact sequence up to portraitColumns (e.g. 2 across diptychs)
-        const portraitChunk: typeof taggedPhotos = [];
-        while (i < taggedPhotos.length && taggedPhotos[i].isPortrait && portraitChunk.length < portraitColumns) {
-          portraitChunk.push(taggedPhotos[i]);
-          i++;
+        // Automatically pair portrait images side by side in one row (2 across on desktop)
+        const portraitChunk: typeof taggedPhotos = [curr];
+        for (let j = i + 1; j < taggedPhotos.length && portraitChunk.length < portraitColumns; j++) {
+          if (!usedIndices.has(j) && taggedPhotos[j].isPortrait) {
+            portraitChunk.push(taggedPhotos[j]);
+            usedIndices.add(j);
+          }
         }
+
+        const avgRatio = portraitChunk.reduce((acc, p) => acc + p.ratio, 0) / portraitChunk.length;
         const { aspectClass, badge } = determineRowAspect(portraitChunk);
+
         rows.push({
-          id: `curated-portraits-${portraitChunk[0].photo.id}-${i}`,
+          id: `curated-portraits-${portraitChunk.map(p => p.photo.id).join('-')}-${i}`,
           type: 'portraits-row',
-          items: portraitChunk.map(p => ({ photo: p.photo, originalIndex: p.originalIndex })),
+          items: portraitChunk.map(p => ({ photo: p.photo, originalIndex: p.originalIndex, ratio: p.ratio })),
           columns: portraitChunk.length,
           aspectClass,
-          badge
+          aspectRatio: avgRatio,
+          badge: portraitChunk.length > 1 ? 'Paired Diptych' : badge
         });
       }
     }
@@ -378,33 +401,28 @@ function buildAdjustableLayout(
       const first = queue.shift()!;
 
       if (!first.isPortrait) {
-        // Landscape photo sits full width in 16:9 cinematic aspect
+        // Landscape photo sits full width maintaining original aspect ratio
         rows.push({
           id: `shuffle-landscape-${first.photo.id}-${rowIdx}`,
           type: 'landscape-16-9',
-          items: [{ photo: first.photo, originalIndex: first.originalIndex }],
+          items: [{ photo: first.photo, originalIndex: first.originalIndex, ratio: first.ratio }],
           columns: 1,
-          aspectClass: 'aspect-video md:aspect-[16/9]',
-          badge: '16:9 Landscape'
+          aspectClass: '',
+          aspectRatio: first.ratio,
+          badge: 'Landscape'
         });
       } else {
-        // Vertical photo: form a multi-portrait row (e.g. 2 across diptych, 3 across, or 4 across)
+        // Vertical photo: form a multi-portrait row (e.g. 2 across diptych)
         const portraitChunk: typeof taggedPhotos = [first];
 
         while (portraitChunk.length < portraitColumns && queue.length > 0) {
-          // Find next portrait in queue
           const nextPortraitIdx = queue.findIndex(q => q.isPortrait);
-          if (nextPortraitIdx === -1) {
-            break;
-          }
+          if (nextPortraitIdx === -1) break;
 
-          // If next portrait is from the SAME shoot as any current member of portraitChunk,
-          // look ahead for an alternative portrait from a DIFFERENT shoot to create contrasting editorial diptych
           let chosenIdx = nextPortraitIdx;
           const chunkShootIds = new Set(portraitChunk.map(p => p.photo.shootId).filter(Boolean));
 
           if (chunkShootIds.size > 0 && queue[nextPortraitIdx].photo.shootId && chunkShootIds.has(queue[nextPortraitIdx].photo.shootId!)) {
-            // Search further ahead in queue for a portrait with different shoot
             const betterIdx = queue.findIndex((q, qIdx) => qIdx > nextPortraitIdx && q.isPortrait && (!q.photo.shootId || !chunkShootIds.has(q.photo.shootId)));
             if (betterIdx !== -1) {
               chosenIdx = betterIdx;
@@ -415,14 +433,16 @@ function buildAdjustableLayout(
           portraitChunk.push(chosen);
         }
 
+        const avgRatio = portraitChunk.reduce((acc, p) => acc + p.ratio, 0) / portraitChunk.length;
         const { aspectClass, badge } = determineRowAspect(portraitChunk);
         rows.push({
-          id: `shuffle-portraits-${portraitChunk[0].photo.id}-${rowIdx}`,
+          id: `shuffle-portraits-${portraitChunk.map(p => p.photo.id).join('-')}-${rowIdx}`,
           type: 'portraits-row',
-          items: portraitChunk.map(p => ({ photo: p.photo, originalIndex: p.originalIndex })),
+          items: portraitChunk.map(p => ({ photo: p.photo, originalIndex: p.originalIndex, ratio: p.ratio })),
           columns: portraitChunk.length,
           aspectClass,
-          badge
+          aspectRatio: avgRatio,
+          badge: portraitChunk.length > 1 ? 'Paired Diptych' : badge
         });
       }
     }
@@ -431,11 +451,10 @@ function buildAdjustableLayout(
   }
 
   if (sortMode === 'neat-aspect') {
-    // ── NEAT ASPECT SORTING: Landscapes first, then vertical stills grouped by exact aspect ──
+    // ── NEAT ASPECT SORTING: Landscapes first, then vertical stills grouped by format ──
     const landscapes = taggedPhotos.filter(p => !p.isPortrait);
     const portraits = taggedPhotos.filter(p => p.isPortrait);
 
-    // Group portraits by format: 2:3 classic stills first, then 9:16 vertical reels, then 3:4 medium format
     const sortedPortraits = [...portraits].sort((a, b) => {
       const getRatioRank = (p: typeof a) => {
         if (p.photo.aspect === '2/3' || (p.ratio > 0.60 && p.ratio <= 0.70)) return 1;
@@ -454,10 +473,11 @@ function buildAdjustableLayout(
       rows.push({
         id: `landscape-${land.photo.id}-${idx}`,
         type: 'landscape-16-9',
-        items: [{ photo: land.photo, originalIndex: land.originalIndex }],
+        items: [{ photo: land.photo, originalIndex: land.originalIndex, ratio: land.ratio }],
         columns: 1,
-        aspectClass: 'aspect-video md:aspect-[16/9]',
-        badge: '16:9 Landscape'
+        aspectClass: '',
+        aspectRatio: land.ratio,
+        badge: 'Landscape'
       });
     });
 
@@ -469,35 +489,43 @@ function buildAdjustableLayout(
   }
 
   if (sortMode === 'newest') {
-    // ── NEWEST FIRST: Chronological flow, chunking adjacent portraits ──
+    // ── NEWEST FIRST: Chronological flow, pairing portraits automatically ──
     const rows: LayoutRow[] = [];
-    let i = 0;
-    while (i < taggedPhotos.length) {
+    const usedIndices = new Set<number>();
+
+    for (let i = 0; i < taggedPhotos.length; i++) {
+      if (usedIndices.has(i)) continue;
       const curr = taggedPhotos[i];
+      usedIndices.add(i);
+
       if (!curr.isPortrait) {
         rows.push({
-          id: `landscape-${curr.photo.id}-${i}`,
+          id: `newest-landscape-${curr.photo.id}-${i}`,
           type: 'landscape-16-9',
-          items: [{ photo: curr.photo, originalIndex: curr.originalIndex }],
+          items: [{ photo: curr.photo, originalIndex: curr.originalIndex, ratio: curr.ratio }],
           columns: 1,
-          aspectClass: 'aspect-video md:aspect-[16/9]',
-          badge: '16:9 Landscape'
+          aspectClass: '',
+          aspectRatio: curr.ratio,
+          badge: 'Landscape'
         });
-        i++;
       } else {
-        const portraitChunk: typeof taggedPhotos = [];
-        while (i < taggedPhotos.length && taggedPhotos[i].isPortrait && portraitChunk.length < portraitColumns) {
-          portraitChunk.push(taggedPhotos[i]);
-          i++;
+        const portraitChunk = [curr];
+        for (let j = i + 1; j < taggedPhotos.length && portraitChunk.length < portraitColumns; j++) {
+          if (!usedIndices.has(j) && taggedPhotos[j].isPortrait) {
+            portraitChunk.push(taggedPhotos[j]);
+            usedIndices.add(j);
+          }
         }
+        const avgRatio = portraitChunk.reduce((acc, p) => acc + p.ratio, 0) / portraitChunk.length;
         const { aspectClass, badge } = determineRowAspect(portraitChunk);
         rows.push({
-          id: `portraits-${i}-${portraitChunk[0].photo.id}`,
+          id: `newest-portraits-${portraitChunk.map(p => p.photo.id).join('-')}-${i}`,
           type: 'portraits-row',
-          items: portraitChunk.map(p => ({ photo: p.photo, originalIndex: p.originalIndex })),
+          items: portraitChunk.map(p => ({ photo: p.photo, originalIndex: p.originalIndex, ratio: p.ratio })),
           columns: portraitChunk.length,
           aspectClass,
-          badge
+          aspectRatio: avgRatio,
+          badge: portraitChunk.length > 1 ? 'Paired Diptych' : badge
         });
       }
     }
@@ -519,10 +547,11 @@ function buildAdjustableLayout(
       rows.push({
         id: `landscape-${land.photo.id}-${lIdx}`,
         type: 'landscape-16-9',
-        items: [{ photo: land.photo, originalIndex: land.originalIndex }],
+        items: [{ photo: land.photo, originalIndex: land.originalIndex, ratio: land.ratio }],
         columns: 1,
-        aspectClass: 'aspect-video md:aspect-[16/9]',
-        badge: '16:9 Landscape'
+        aspectClass: '',
+        aspectRatio: land.ratio,
+        badge: 'Landscape'
       });
       lIdx++;
     }
@@ -580,6 +609,19 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
   const [aspectFilter, setAspectFilter] = useState<AspectFilter>(() => initialSettings.aspectFilter);
   const [sortMode, setSortMode] = useState<SortMode>(() => initialSettings.sortMode);
   const [shuffleSeed, setShuffleSeed] = useState<number>(() => initialSettings.shuffleSeed);
+
+  // Responsive layout detection: Desktop (landscape full width, portraits paired two across) vs Mobile (single column)
+  const [isDesktop, setIsDesktop] = useState(true);
+  useEffect(() => {
+    const checkIsDesktop = () => {
+      if (typeof window !== 'undefined') {
+        setIsDesktop(window.innerWidth >= 768);
+      }
+    };
+    checkIsDesktop();
+    window.addEventListener('resize', checkIsDesktop, { passive: true });
+    return () => window.removeEventListener('resize', checkIsDesktop);
+  }, []);
 
   // Curation Filters: Mood, Color Space, Category, Aspect restored from localStorage
   const [activeFilterTab, setActiveFilterTab] = useState<FilterTab>(() => initialSettings.activeFilterTab);
@@ -1535,7 +1577,7 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
               Photography Stills Archive
             </span>
 
-            <h3 className="font-serif-garamond text-2xl sm:text-3xl md:text-4xl text-[#f0ede8] font-normal tracking-wide max-w-xl">
+            <h3 className="font-serif-heading text-2xl sm:text-3xl md:text-4xl text-[#f0ede8] font-normal tracking-wide max-w-xl">
               Upload Your Original Stills &amp; Photography
             </h3>
 
@@ -1580,7 +1622,7 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
             <span className="text-[11px] uppercase tracking-[0.25em] text-amber-400/80 font-mono mb-2">
               Photography Archive
             </span>
-            <h3 className="font-serif-garamond text-2xl sm:text-3xl md:text-4xl text-[#f0ede8] font-normal tracking-wide max-w-xl">
+            <h3 className="font-serif-heading text-2xl sm:text-3xl md:text-4xl text-[#f0ede8] font-normal tracking-wide max-w-xl">
               Selected Frames &amp; Motion Stills
             </h3>
             <p className="text-xs sm:text-sm text-[#f0ede8]/40 max-w-md mt-1.5 font-light">
@@ -1599,15 +1641,17 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
           </button>
         </div>
       ) : (
-        <div className="w-full divide-y divide-white/[0.08]">
+        <div className="w-full flex flex-col gap-2 sm:gap-2.5 md:gap-3 bg-[#070707]">
           {layoutRows.map((row) => {
-            // ── CASE 1: 16:9 Horizontal Landscape Frame ──
+            // ── CASE 1: Landscape Image across Full Available Content Width ──
             if (row.type === 'landscape-16-9') {
               const item = row.items[0];
+              const ratio = item.ratio || 1.777;
               return (
                 <div 
                   key={row.id} 
-                  className="relative w-full aspect-video md:aspect-[16/9] bg-[#070707] overflow-hidden"
+                  className="relative w-full overflow-hidden bg-[#070707]"
+                  style={{ aspectRatio: `${ratio}` }}
                 >
                   <InteractiveCatalogFrame
                     photo={item.photo}
@@ -1627,15 +1671,19 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
               );
             }
 
-            // ── CASE 2: Single Portrait Item Centered with Fine Gallery Matte Framing ──
+            // ── CASE 2: Single Odd Portrait (Gracefully fills centered column without empty space) ──
             if (row.items.length === 1) {
               const item = row.items[0];
+              const ratio = item.ratio || 0.667;
               return (
                 <div 
                   key={row.id} 
-                  className="w-full py-8 sm:py-12 md:py-16 bg-[#070707] flex items-center justify-center px-4"
+                  className="w-full flex justify-center bg-[#070707] py-1"
                 >
-                  <div className={`w-full max-w-sm sm:max-w-md md:max-w-lg ${row.aspectClass || 'aspect-[2/3]'} border border-white/10 shadow-2xl relative overflow-hidden bg-black`}>
+                  <div 
+                    className="relative w-full max-w-lg md:max-w-xl lg:max-w-2xl overflow-hidden bg-[#070707]"
+                    style={{ aspectRatio: `${ratio}` }}
+                  >
                     <InteractiveCatalogFrame
                       photo={item.photo}
                       index={item.originalIndex}
@@ -1655,39 +1703,39 @@ export function PhotoCatalog({ isCreator = false, onToggleCreator }: PhotoCatalo
               );
             }
 
-            // ── CASE 3: Multi-Portrait Row (Side-by-Side Next to Each Other, Matched Height & Flush Edges) ──
+            // ── CASE 3: Automatically Paired Portraits (Two across on Desktop, Single Column on Mobile) ──
+            const rowRatio = row.aspectRatio || 0.667;
+            const gridColsClass = row.columns === 3 ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 md:grid-cols-2';
             return (
               <div 
                 key={row.id} 
-                className={`w-full grid ${
-                  row.columns === 2 
-                    ? 'grid-cols-2' 
-                    : row.columns === 3 
-                      ? 'grid-cols-3' 
-                      : 'grid-cols-2 md:grid-cols-4'
-                } divide-x divide-white/[0.08] bg-[#070707] overflow-hidden`}
+                className={`w-full grid ${gridColsClass} gap-2 sm:gap-2.5 md:gap-3 bg-[#070707] overflow-hidden`}
               >
-                {row.items.map((item) => (
-                  <div 
-                    key={`frame-${item.photo.id}`}
-                    className={`relative w-full overflow-hidden ${row.aspectClass || 'aspect-[2/3]'}`}
-                  >
-                    <InteractiveCatalogFrame
-                      photo={item.photo}
-                      index={item.originalIndex}
-                      totalPhotos={visiblePhotos.length}
-                      scrollProgress={scrollProgress}
-                      overrideMode={zoomMode}
-                      fitMode={fitMode}
-                      isLandscapeFullWidth={false}
-                      onSelect={() => openLightbox(item.originalIndex)}
-                      onDelete={isCreator ? () => handleDeletePhoto(item.originalIndex) : undefined}
-                      onMovePrev={isCreator && item.originalIndex > 0 ? () => handleMovePhoto(item.photo.id, 'prev') : undefined}
-                      onMoveNext={isCreator && item.originalIndex < visiblePhotos.length - 1 ? () => handleMovePhoto(item.photo.id, 'next') : undefined}
-                      onError={handleImageError}
-                    />
-                  </div>
-                ))}
+                {row.items.map((item) => {
+                  const itemRatio = isDesktop ? rowRatio : (item.ratio || 0.667);
+                  return (
+                    <div 
+                      key={`frame-${item.photo.id}`}
+                      className="relative w-full overflow-hidden bg-[#070707]"
+                      style={{ aspectRatio: `${itemRatio}` }}
+                    >
+                      <InteractiveCatalogFrame
+                        photo={item.photo}
+                        index={item.originalIndex}
+                        totalPhotos={visiblePhotos.length}
+                        scrollProgress={scrollProgress}
+                        overrideMode={zoomMode}
+                        fitMode={fitMode}
+                        isLandscapeFullWidth={false}
+                        onSelect={() => openLightbox(item.originalIndex)}
+                        onDelete={isCreator ? () => handleDeletePhoto(item.originalIndex) : undefined}
+                        onMovePrev={isCreator && item.originalIndex > 0 ? () => handleMovePhoto(item.photo.id, 'prev') : undefined}
+                        onMoveNext={isCreator && item.originalIndex < visiblePhotos.length - 1 ? () => handleMovePhoto(item.photo.id, 'next') : undefined}
+                        onError={handleImageError}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             );
           })}

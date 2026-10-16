@@ -63,23 +63,23 @@ const CATEGORY_META: Record<VideoProject['category'], { label: string; glow: str
 
 // Fallback images for non-YouTube projects or restricted/unavailable thumbnails
 const FALLBACK_POSTERS: Record<string, string> = {
-  'aashirvaad': 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80',
-  'gametheory': 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80',
-  'godrej-cinthol': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
-  'que-sunglasses': 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=1200&q=80',
-  'google-io-connect': 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80',
-  'landmark-corporate': 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
-  'salesforce-event': 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80',
-  'hdfc-ergo': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
-  'digiyatra-podcast': 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80',
-  'virdas-tour': 'https://img.youtube.com/vi/eLAbF6DWp8A/hqdefault.jpg',
+  'aashirvaad': 'https://img.youtube.com/vi/iWlh9rMgmPA/hqdefault.jpg',
+  'gametheory': 'https://img.youtube.com/vi/B4lshIGcCdA/hqdefault.jpg',
+  'godrej-cinthol': 'https://img.youtube.com/vi/wk84fENEzQ8/hqdefault.jpg',
+  'que-sunglasses': 'https://img.youtube.com/vi/3mAWoks5UmE/hqdefault.jpg',
+  'google-io-connect': 'https://img.youtube.com/vi/NgmeuPV99EU/hqdefault.jpg',
+  'landmark-corporate': 'https://img.youtube.com/vi/fHtX3c6nSoU/hqdefault.jpg',
+  'salesforce-event': 'https://img.youtube.com/vi/qMB7bFLIwUA/hqdefault.jpg',
+  'hdfc-ergo': 'https://img.youtube.com/vi/n6ovVkJtR5o/hqdefault.jpg',
+  'digiyatra-podcast': 'https://img.youtube.com/vi/C_KjUcNlxkI/hqdefault.jpg',
+  'virdas-tour': '/virdas-youtube-thumbnail.jpg',
   'alan-walker-kingfisher': '/alan-walker-kingfisher.jpg',
-  'prestige-cookware': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80',
-  'fixderma-product': 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=80',
-  'xiaomi-event': 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1200&q=80',
-  'hyundai-ioniq-hi-tea': 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80',
-  'featured-film-z0qm': 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80',
-  'hyundai-commercial': 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80'
+  'prestige-cookware': 'https://img.youtube.com/vi/10mYkHbF7QM/hqdefault.jpg',
+  'fixderma-product': 'https://img.youtube.com/vi/cLIFHGwiMxs/hqdefault.jpg',
+  'xiaomi-event': 'https://img.youtube.com/vi/_BfXEl9iBTs/hqdefault.jpg',
+  'hyundai-ioniq-hi-tea': 'https://img.youtube.com/vi/PKHYOfKeQH8/hqdefault.jpg',
+  'featured-film-z0qm': 'https://img.youtube.com/vi/Z0qMvkytexc/hqdefault.jpg',
+  'hyundai-commercial': 'https://img.youtube.com/vi/PKHYOfKeQH8/hqdefault.jpg'
 };
 
 export const VideoCatalog: React.FC<VideoCatalogProps> = ({
@@ -241,18 +241,18 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
   // Helper to get poster image
   const getPosterUrl = (video: VideoProject) => {
     if (video.id === 'virdas-tour') {
-      return video.thumbnail || 'https://img.youtube.com/vi/eLAbF6DWp8A/hqdefault.jpg';
+      return video.thumbnail || '/virdas-youtube-thumbnail.jpg';
     }
     if (video.id === 'alan-walker-kingfisher') {
-      return video.thumbnail || 'https://img.youtube.com/vi/chfwqrpuYM0/maxresdefault.jpg';
+      return video.thumbnail || '/alan-walker-kingfisher.jpg';
     }
     if (video.thumbnail) return video.thumbnail;
     if (video.imageUrl) return video.imageUrl;
     if (video.youtubeId) {
-      return `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`;
+      return `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`;
     }
     if (FALLBACK_POSTERS[video.id]) return FALLBACK_POSTERS[video.id];
-    return 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80';
+    return '/photos/photo-01.jpg';
   };
 
   return (
@@ -638,7 +638,7 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                       <span className="text-[10px] uppercase font-mono tracking-[0.2em] text-amber-400/90 mb-1">
                         Notice · External Playback Required
                       </span>
-                      <h4 className="font-serif-garamond text-xl sm:text-2xl text-white font-normal mb-2">
+                      <h4 className="font-serif-heading text-xl sm:text-2xl text-white font-normal mb-2">
                         Embedding Restricted by Video Owner
                       </h4>
                       <p className="text-xs text-white/60 max-w-sm mb-5 leading-relaxed">
@@ -695,7 +695,7 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                       ) : (
                         <div className="absolute inset-0 z-20 bg-[#0c0c0c] p-6 flex flex-col items-center justify-center text-center">
                           <Film className="w-8 h-8 text-amber-400 mb-3" />
-                          <h4 className="font-serif-garamond text-xl text-white mb-2">{video.title}</h4>
+                          <h4 className="font-serif-heading text-xl text-white font-normal mb-2">{video.title}</h4>
                           <p className="text-xs text-white/60 max-w-sm mb-4">No embedded video source available for this item.</p>
                           {hasExternalUrl && (
                             <a
@@ -767,23 +767,15 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                       onError={(e) => {
                         const target = e.currentTarget;
                         if (video.id === 'virdas-tour') {
-                          if (!target.src.includes('hqdefault')) {
-                            target.src = 'https://img.youtube.com/vi/eLAbF6DWp8A/hqdefault.jpg';
-                          } else if (!target.src.includes('virdas-youtube-thumbnail.jpg')) {
-                            target.src = '/virdas-youtube-thumbnail.jpg';
-                          }
+                          target.src = '/virdas-youtube-thumbnail.jpg';
                         } else if (video.id === 'alan-walker-kingfisher') {
-                          if (!target.src.includes('alan-walker-kingfisher.jpg')) {
-                            target.src = '/alan-walker-kingfisher.jpg';
-                          } else if (!target.src.includes('sddefault')) {
-                            target.src = 'https://img.youtube.com/vi/chfwqrpuYM0/sddefault.jpg';
-                          }
-                        } else if (FALLBACK_POSTERS[video.id] && !target.src.includes(FALLBACK_POSTERS[video.id])) {
+                          target.src = '/alan-walker-kingfisher.jpg';
+                        } else if (video.youtubeId && !target.src.includes('hqdefault')) {
+                          target.src = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`;
+                        } else if (FALLBACK_POSTERS[video.id] && target.src !== FALLBACK_POSTERS[video.id]) {
                           target.src = FALLBACK_POSTERS[video.id];
-                        } else if (video.youtubeId && !target.src.includes('sddefault') && !target.src.includes('hqdefault')) {
-                          target.src = `https://img.youtube.com/vi/${video.youtubeId}/sddefault.jpg`;
                         } else {
-                          target.src = 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80';
+                          target.src = '/photos/photo-01.jpg';
                         }
                       }}
                     />
@@ -846,8 +838,8 @@ export const VideoCatalog: React.FC<VideoCatalogProps> = ({
                     onClick={isPlaying ? handleStopVideo : handlePlayVideo}
                     className="text-left group/title inline-flex items-center gap-2.5 text-[#f0ede8] hover:text-amber-300 transition-colors cursor-pointer"
                   >
-                    <h3 className="font-serif-garamond text-2xl sm:text-3xl font-normal leading-tight group-hover/title:text-amber-300 transition-colors">
-                      {video.title} {video.highlight && <span className="italic">{video.highlight}</span>}
+                    <h3 className="font-serif-heading text-xl sm:text-2xl font-normal leading-tight group-hover/title:text-amber-300 transition-colors">
+                      {video.title} {video.highlight && <span className="opacity-70 font-sans text-xs sm:text-sm ml-1.5 font-normal">· {video.highlight}</span>}
                     </h3>
                     {isPlaying && (
                       <span className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-400/15 border border-amber-400/30 text-[9px] text-amber-300 font-mono uppercase tracking-wider">

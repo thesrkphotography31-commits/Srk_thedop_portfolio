@@ -202,7 +202,7 @@ const VIDEO_PROJECTS: VideoProject[] = [
     category: 'event',
     youtubeId: 'eLAbF6DWp8A',
     videoUrl: 'https://youtu.be/eLAbF6DWp8A',
-    thumbnail: 'https://img.youtube.com/vi/eLAbF6DWp8A/hqdefault.jpg',
+    thumbnail: '/virdas-youtube-thumbnail.jpg',
     aspect: '16/9',
     role: 'Cinematographer',
     client: 'Vir Das',
@@ -218,7 +218,7 @@ const VIDEO_PROJECTS: VideoProject[] = [
     category: 'event',
     youtubeId: 'chfwqrpuYM0',
     videoUrl: 'https://youtu.be/chfwqrpuYM0',
-    thumbnail: 'https://img.youtube.com/vi/chfwqrpuYM0/maxresdefault.jpg',
+    thumbnail: '/alan-walker-kingfisher.jpg',
     aspect: '16/9',
     role: 'Cinematographer',
     client: 'Kingfisher / Alan Walker',
@@ -998,19 +998,18 @@ export default function App() {
           </div>
         )}
 
-        {/* Editorial Typography in Left Negative Space (Framed so the upper-right subject and face remain open) */}
-        <div className="relative z-10 px-5 sm:px-6 md:px-12 pb-7 sm:pb-12 md:pb-14 max-w-[84%] xs:max-w-[76%] sm:max-w-xl lg:max-w-2xl">
-          <h1 className="font-serif-garamond text-[38px] xs:text-[42px] sm:text-[58px] md:text-[72px] lg:text-[84px] font-normal leading-[0.92] tracking-[-0.015em] mb-3 sm:mb-4 text-[#f0ede8]">
-            Sriram<br />
-            <span className="italic font-normal opacity-90">Karthick</span>
+        {/* Editorial Typography in Left Negative Space */}
+        <div className="relative z-10 px-5 sm:px-6 md:px-12 pb-7 sm:pb-12 md:pb-14 max-w-[88%] xs:max-w-[80%] sm:max-w-xl lg:max-w-2xl">
+          <h1 className="font-serif-heading text-[38px] xs:text-[46px] sm:text-[60px] md:text-[72px] font-normal leading-[1.02] tracking-tight mb-4 text-[#f0ede8]">
+            Sriram Karthick
           </h1>
 
           {/* Professional Positioning: Primary and Secondary */}
-          <div className="mb-6 sm:mb-8 space-y-1.5 sm:space-y-2">
-            <span className="block font-serif-garamond text-[18px] sm:text-[23px] md:text-[27px] tracking-[0.02em] text-[#f0ede8]/90 leading-tight">
+          <div className="mb-7 sm:mb-8 space-y-2">
+            <span className="block font-serif-heading text-[19px] sm:text-[23px] md:text-[26px] text-[#f0ede8]/90 font-normal leading-tight">
               Cinematographer &nbsp;·&nbsp; Photographer
             </span>
-            <span className="block text-[10px] sm:text-[12px] font-light tracking-[0.22em] uppercase text-[#f0ede8]/60">
+            <span className="block font-sans text-[11px] sm:text-[12.5px] font-normal tracking-[0.14em] uppercase text-[#f0ede8]/65">
               Creative Director &nbsp;·&nbsp; Creative Producer
             </span>
           </div>
@@ -1019,19 +1018,19 @@ export default function App() {
           <div className="flex items-center gap-3 sm:gap-4">
             <a
               href="#work"
-              className="inline-flex items-center gap-2 sm:gap-2.5 px-4.5 sm:px-6 py-2.5 sm:py-3 bg-[#f0ede8] text-[#0e0e0e] text-[9.5px] sm:text-[11px] tracking-[0.18em] uppercase font-medium rounded-full hover:bg-white transition-all duration-300 cursor-pointer group shadow-lg"
+              className="inline-flex items-center gap-2 sm:gap-2.5 px-5 sm:px-6 py-2.5 sm:py-3 bg-[#f0ede8] text-[#0e0e0e] text-[11px] sm:text-[12px] tracking-[0.1em] uppercase font-semibold rounded-full hover:bg-white transition-all duration-200 cursor-pointer group shadow-lg"
               id="hero-explore-work-btn"
             >
               <span>Explore My Work</span>
-              <ArrowRight className="w-3 sm:w-3.5 h-3 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </a>
             <button
               onClick={() => setShowInquiryModal(true)}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 border border-white/20 hover:border-white/50 text-[#f0ede8] text-[9.5px] sm:text-[11px] tracking-[0.18em] uppercase rounded-full hover:bg-white/10 transition-all duration-300 cursor-pointer backdrop-blur-sm group"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-5 sm:px-6 py-2.5 sm:py-3 border border-white/20 hover:border-white/50 text-[#f0ede8] text-[11px] sm:text-[12px] tracking-[0.1em] uppercase rounded-full hover:bg-white/10 transition-all duration-200 cursor-pointer backdrop-blur-sm group"
               id="hero-inquire-btn"
             >
               <span>Inquire</span>
-              <ArrowUpRight className="w-3 sm:w-3.5 h-3 sm:h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
           </div>
         </div>
@@ -1041,10 +1040,10 @@ export default function App() {
       <section id="clients" className="relative w-full max-w-full overflow-hidden py-6 sm:py-8 border-t border-b border-white/[0.06] bg-[#0c0c0c] select-none">
         {/* Section Title & Interaction Hint */}
         <div className="px-6 md:px-12 mb-3 sm:mb-4 flex items-center justify-between">
-          <span className="text-[10px] font-light tracking-[0.26em] uppercase text-white/40">
+          <span className="font-sans text-[11px] font-normal tracking-[0.18em] uppercase text-white/50">
             SELECTED CLIENTS &amp; COLLABORATIONS
           </span>
-          <span className="hidden sm:inline-block text-[9px] font-light tracking-[0.2em] uppercase text-white/25">
+          <span className="hidden sm:inline-block font-sans text-[10px] font-normal tracking-[0.14em] uppercase text-white/30">
             Drag or scroll to browse
           </span>
         </div>
@@ -1056,17 +1055,17 @@ export default function App() {
       {/* ── WORK SHOWCASE SECTION ────────────────────── */}
       <section id="work" className="pt-6 sm:pt-8 md:pt-10">
         
-        {/* Section Header & Discipline Switcher: Unified Centered Header */}
-        <div className="relative px-6 md:px-12 py-6 sm:py-8 border-b border-white/[0.06] bg-[#0b0b0b]/60 flex flex-col items-center justify-center">
+        {/* Section Header & Discipline Switcher: Centered on shared axis */}
+        <div className="relative px-6 md:px-12 py-6 sm:py-8 border-b border-white/[0.06] bg-[#0b0b0b]/60 flex flex-col items-center justify-center text-center">
           {/* Year Label positioned on the right */}
-          <div className="absolute right-6 md:right-12 top-6 sm:top-8 pointer-events-none">
-            <span className="font-serif-garamond text-[13px] sm:text-[16px] text-[#f0ede8]/40 tracking-wider">
+          <div className="hidden lg:block absolute right-6 md:right-12 top-1/2 -translate-y-1/2 pointer-events-none">
+            <span className="font-serif-heading text-[13px] sm:text-[15px] text-[#f0ede8]/45 tracking-wider">
               2019 &ndash; 2026
             </span>
           </div>
 
-          {/* Heading - Center-aligned horizontally within main container */}
-          <h2 className="font-serif-garamond text-2xl sm:text-3xl md:text-4xl text-[#f0ede8] font-normal text-center">
+          {/* Heading - Perfectly center-aligned horizontally */}
+          <h2 className="font-serif-heading text-2xl sm:text-3xl md:text-4xl text-[#f0ede8] font-normal text-center w-full">
             Archive &amp; Motion Stills
           </h2>
 
@@ -1075,7 +1074,7 @@ export default function App() {
             id="work-discipline-toggle"
             role="tablist"
             aria-label="Select Work Category: Videography or Photography"
-            className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-[#0e0e0e] border border-white/[0.1] rounded-xl p-1 shadow-md mt-4 sm:mt-5"
+            className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-[#0e0e0e] border border-white/[0.1] rounded-xl p-1 shadow-md mt-4 sm:mt-5 mx-auto"
           >
             <div className="grid grid-cols-2 gap-1 sm:gap-1.5">
               {/* Videography Option Button */}
@@ -1276,13 +1275,13 @@ export default function App() {
                   href="https://www.linkedin.com/in/sriram-karthick-2250551ab/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="font-serif-garamond text-3xl sm:text-4xl text-[#f0ede8] hover:text-white block leading-tight hover:underline decoration-white/30 underline-offset-4 transition-colors"
+                  className="font-serif-heading text-3xl sm:text-4xl text-[#f0ede8] hover:text-white block leading-tight hover:underline decoration-white/30 underline-offset-4 transition-colors font-normal"
                   title="Sriram Karthick on LinkedIn"
                 >
                   Sriram Karthick
                 </a>
-                <p className="text-[10px] sm:text-[11px] font-light tracking-[0.24em] uppercase text-white/50 mt-2">
-                  FILMMAKER &nbsp;/&nbsp; CINEMATOGRAPHER &nbsp;/&nbsp; CREATIVE PRODUCER
+                <p className="font-sans text-[11px] font-normal tracking-[0.16em] uppercase text-white/55 mt-2">
+                  CINEMATOGRAPHER &nbsp;·&nbsp; PHOTOGRAPHER &nbsp;·&nbsp; CREATIVE PRODUCER
                 </p>
               </div>
             </div>
@@ -1290,7 +1289,7 @@ export default function App() {
             {/* Headline & Key Credentials Column */}
             <div className="lg:col-span-7 flex flex-col justify-center lg:pl-2">
               <div className="flex items-center justify-between mb-5">
-                <span className="text-[11px] font-light tracking-[0.24em] uppercase text-[#f0ede8]/40 block">
+                <span className="font-sans text-[11px] font-normal tracking-[0.18em] uppercase text-[#f0ede8]/45 block">
                   About
                 </span>
                 {isCreator && (
@@ -1308,7 +1307,7 @@ export default function App() {
                 )}
               </div>
               
-              <h2 className="font-serif-garamond text-[32px] sm:text-[42px] md:text-[48px] lg:text-[52px] font-normal leading-[1.14] tracking-[-0.015em] text-[#f0ede8] mb-8">
+              <h2 className="font-serif-heading text-[30px] sm:text-[38px] md:text-[44px] font-normal leading-[1.16] text-[#f0ede8] mb-8">
                 {aboutData?.headline || "I build visual stories from the first idea to the final frame."}
               </h2>
 
@@ -1320,10 +1319,10 @@ export default function App() {
                   { value: "100+", label: "Clients Worldwide" }
                 ]).map((stat: any, idx: number) => (
                   <div key={idx} className="py-5 px-3 bg-white/[0.02] border border-white/[0.08] text-center flex flex-col items-center justify-center rounded-xl">
-                    <span className="font-serif-garamond text-2xl sm:text-3xl lg:text-4xl text-[#f0ede8] block mb-1.5 font-normal">
+                    <span className="font-serif-heading text-2xl sm:text-3xl lg:text-4xl text-[#f0ede8] block mb-1 font-normal">
                       {stat.value}
                     </span>
-                    <span className="text-[9px] sm:text-[10px] tracking-[0.18em] uppercase text-white/45 leading-[1.35] block">
+                    <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.12em] uppercase text-white/50 leading-[1.35] block">
                       {stat.label}
                     </span>
                   </div>
@@ -1338,10 +1337,10 @@ export default function App() {
             
             {/* Primary Column: Main About Description */}
             <div className="lg:col-span-7 space-y-4">
-              <span className="text-[10.5px] sm:text-[11px] font-mono tracking-[0.22em] uppercase text-white/40 block mb-3">
+              <span className="font-sans text-[11px] font-normal tracking-[0.18em] uppercase text-white/45 block mb-3">
                 Background &amp; Storytelling Approach
               </span>
-              <div className="space-y-6 sm:space-y-7 text-[#f0ede8]/75 text-[16px] sm:text-[17px] md:text-[18px] lg:text-[18.5px] xl:text-[19px] leading-[1.88] sm:leading-[1.92] md:leading-[1.95] font-light">
+              <div className="space-y-5 text-[#f0ede8]/80 text-[16px] sm:text-[17px] md:text-[18px] leading-[1.75] font-normal font-sans">
                 {aboutData?.paragraphs && aboutData.paragraphs.length > 0 ? (
                   aboutData.paragraphs.map((p: string, idx: number) => (
                     <p key={idx}>{p}</p>
@@ -1349,19 +1348,13 @@ export default function App() {
                 ) : (
                   <>
                     <p>
-                      I'm a filmmaker, cinematographer and creative producer with over 7 years of experience developing and producing visual stories for brands, businesses and people.
+                      I'm a cinematographer, photographer, creative director and creative producer with over 7 years of experience crafting visual stories for brands, businesses and audiences worldwide.
                     </p>
                     <p>
-                      My work spans commercials, brand films, documentaries, product films, events and photography. I approach every project through the lens of storytelling, combining creative direction, visual craft and practical production thinking.
+                      My work spans commercial TVCs, brand films, documentaries, product films, arena events and editorial photography. I approach each project through narrative depth—uniting creative direction, visual craft and rigorous on-set production.
                     </p>
                     <p>
-                      From shaping an initial concept and planning the shoot to working with teams on set and refining the final edit, I enjoy being involved in the complete creative process.
-                    </p>
-                    <p>
-                      Whether it's a large-scale production or a focused visual project, my goal is to create work that is purposeful, cinematic and connected to the audience.
-                    </p>
-                    <p>
-                      I collaborate with brands, agencies and creative teams to develop ideas into meaningful visual experiences.
+                      From shaping the initial concept and lighting the frame to camera operation and final DaVinci Resolve color grading, I guide projects from first idea to the final frame to deliver purposeful, cinematic work.
                     </p>
                   </>
                 )}
@@ -1372,13 +1365,13 @@ export default function App() {
             <div className="lg:col-span-5">
               <div className="p-5 sm:p-6 bg-[#0e0e0e] border border-white/[0.08] rounded-xl space-y-4 sm:space-y-5">
                 <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">
-                  <span className="text-[10px] sm:text-[10.5px] font-medium tracking-[0.22em] uppercase text-white/50 block">
+                  <span className="font-sans text-[11px] font-normal tracking-[0.16em] uppercase text-white/55 block">
                     Production &amp; Creative Capabilities
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-[#D8C7A5]/70" />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-x-5 gap-y-3.5 pt-0.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-x-5 gap-y-4 pt-1">
                   {(aboutData?.capabilityGroups || defaultPortfolioContent.about?.capabilityGroups || [
                     {
                       category: "Creative & Direction",
@@ -1417,7 +1410,7 @@ export default function App() {
                     }
                   ]).map((group: any, gIdx: number) => (
                     <div key={gIdx} className="space-y-1.5">
-                      <h4 className="text-[10px] sm:text-[10.5px] font-mono font-medium tracking-[0.16em] uppercase text-white/60 flex items-center gap-1.5">
+                      <h4 className="font-sans text-[11px] font-medium tracking-[0.1em] uppercase text-white/70 flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
                         {group.category}
                       </h4>
@@ -1425,7 +1418,7 @@ export default function App() {
                         {group.items.map((item: string, iIdx: number) => (
                           <span 
                             key={iIdx} 
-                            className="px-2.5 py-1 bg-[#161616] border border-white/[0.07] text-white/75 text-[10.5px] sm:text-[11px] rounded-md tracking-wide hover:border-white/20 transition-colors"
+                            className="font-sans px-2.5 py-1 bg-[#161616] border border-white/[0.08] text-white/80 text-[11px] sm:text-[12px] rounded-md tracking-normal hover:border-white/20 transition-colors"
                           >
                             {item}
                           </span>
@@ -1447,15 +1440,13 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start max-w-7xl mx-auto">
           
           <div className="lg:col-span-6">
-            <span className="text-[10px] font-light tracking-[0.24em] uppercase text-[#f0ede8]/35 block mb-4">
+            <span className="font-sans text-[11px] font-normal tracking-[0.18em] uppercase text-[#f0ede8]/45 block mb-4">
               Get in Touch
             </span>
-            <h2 className="font-serif-garamond text-[52px] sm:text-[68px] md:text-[88px] font-normal leading-[0.96] tracking-[-0.015em] text-[#f0ede8] mb-8">
-              Let&apos;s<br />
-              <span className="italic font-normal">make</span><br />
-              something.
+            <h2 className="font-serif-heading text-[44px] sm:text-[58px] md:text-[72px] font-normal leading-[1.0] text-[#f0ede8] mb-6">
+              Let&apos;s make something.
             </h2>
-            <p className="font-serif-garamond italic text-lg sm:text-xl text-[#f0ede8]/70 max-w-md mb-8 leading-relaxed">
+            <p className="font-serif-heading text-lg sm:text-xl text-[#f0ede8]/75 max-w-md mb-8 leading-relaxed font-normal">
               Available worldwide for cinematography, commercial photography, brand films, and select creative projects. Let&apos;s discuss your upcoming shoot.
             </p>
 
@@ -1464,7 +1455,7 @@ export default function App() {
                 href="https://wa.me/917200845915?text=Hello%20Sriram%2C%20I%20would%20like%20to%20discuss%20a%20project%20collaboration."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#25D366] text-black text-[12px] tracking-[0.16em] uppercase font-semibold rounded-full hover:bg-[#20ba59] transition-all duration-300 cursor-pointer shadow-lg shadow-[#25D366]/20 hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#25D366] text-black text-[12px] tracking-[0.1em] uppercase font-semibold rounded-full hover:bg-[#20ba59] transition-all duration-200 cursor-pointer shadow-lg shadow-[#25D366]/20 hover:scale-[1.02] active:scale-[0.98]"
                 id="book-inquiry-whatsapp-btn"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
@@ -1475,7 +1466,7 @@ export default function App() {
 
               <button
                 onClick={() => setShowInquiryModal(true)}
-                className="inline-flex items-center gap-2 px-5 py-3.5 border border-white/20 text-[#f0ede8] text-[11px] tracking-[0.16em] uppercase font-light rounded-full hover:bg-white/10 hover:border-white/40 transition-all duration-300 cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 border border-white/20 text-[#f0ede8] text-[12px] tracking-[0.1em] uppercase font-medium rounded-full hover:bg-white/10 hover:border-white/40 transition-all duration-200 cursor-pointer"
                 id="open-custom-brief-btn"
               >
                 <Sparkles className="w-3.5 h-3.5 opacity-60" />
@@ -1490,12 +1481,12 @@ export default function App() {
               {/* Email Row */}
               <div className="py-4 sm:py-5 flex items-center justify-between group">
                 <div>
-                  <span className="text-[10px] font-light tracking-[0.2em] uppercase text-[#f0ede8]/35 block mb-1">
+                  <span className="font-sans text-[11px] font-normal tracking-[0.16em] uppercase text-[#f0ede8]/45 block mb-1">
                     Direct Email
                   </span>
                   <a 
                     href="mailto:thesrkphotography31@gmail.com" 
-                    className="text-[15px] sm:text-[16px] font-light text-[#f0ede8]/85 group-hover:text-white transition-colors"
+                    className="font-sans text-[15px] sm:text-[16px] font-normal text-[#f0ede8]/90 group-hover:text-white transition-colors"
                   >
                     thesrkphotography31@gmail.com
                   </a>
@@ -1512,13 +1503,13 @@ export default function App() {
               {/* Phone Row */}
               <div className="py-4 sm:py-5 flex items-center justify-between group">
                 <div>
-                  <span className="text-[10px] font-light tracking-[0.2em] uppercase text-[#f0ede8]/35 block mb-1">
+                  <span className="font-sans text-[11px] font-normal tracking-[0.16em] uppercase text-[#f0ede8]/45 block mb-1">
                     Phone &amp; WhatsApp
                   </span>
                   <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
                     <a 
                       href="tel:+917200845915" 
-                      className="text-[15px] sm:text-[16px] font-light text-[#f0ede8]/85 group-hover:text-white transition-colors"
+                      className="font-sans text-[15px] sm:text-[16px] font-normal text-[#f0ede8]/90 group-hover:text-white transition-colors"
                     >
                       +91 72008 45915
                     </a>
@@ -1548,14 +1539,14 @@ export default function App() {
               {/* Instagram Row */}
               <div className="py-4 sm:py-5 flex items-center justify-between group">
                 <div>
-                  <span className="text-[10px] font-light tracking-[0.2em] uppercase text-[#f0ede8]/35 block mb-1">
+                  <span className="font-sans text-[11px] font-normal tracking-[0.16em] uppercase text-[#f0ede8]/45 block mb-1">
                     Instagram
                   </span>
                   <a 
                     href="https://www.instagram.com/srk.dop/" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-[15px] sm:text-[16px] font-light text-[#f0ede8]/85 group-hover:text-white transition-colors inline-flex items-center gap-2"
+                    className="font-sans text-[15px] sm:text-[16px] font-normal text-[#f0ede8]/90 group-hover:text-white transition-colors inline-flex items-center gap-2"
                   >
                     <span>@srk.dop</span>
                     <span className="text-white/40 text-xs hidden sm:inline">(Sriram Karthick)</span>
@@ -1576,14 +1567,14 @@ export default function App() {
               {/* LinkedIn Row */}
               <div className="py-4 sm:py-5 flex items-center justify-between group">
                 <div>
-                  <span className="text-[10px] font-light tracking-[0.2em] uppercase text-[#f0ede8]/35 block mb-1">
+                  <span className="font-sans text-[11px] font-normal tracking-[0.16em] uppercase text-[#f0ede8]/45 block mb-1">
                     LinkedIn
                   </span>
                   <a 
                     href="https://www.linkedin.com/in/sriram-karthick-2250551ab/" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-[15px] sm:text-[16px] font-light text-[#f0ede8]/85 group-hover:text-white transition-colors inline-flex items-center gap-2"
+                    className="font-sans text-[15px] sm:text-[16px] font-normal text-[#f0ede8]/90 group-hover:text-white transition-colors inline-flex items-center gap-2"
                   >
                     <span>Sriram Karthick</span>
                     <ExternalLink className="w-3.5 h-3.5 opacity-50" />
@@ -1603,10 +1594,10 @@ export default function App() {
               {/* Location Row */}
               <div className="py-4 sm:py-5 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-light tracking-[0.2em] uppercase text-[#f0ede8]/35 block mb-1">
+                  <span className="font-sans text-[11px] font-normal tracking-[0.16em] uppercase text-[#f0ede8]/45 block mb-1">
                     Location
                   </span>
-                  <span className="text-[15px] sm:text-[16px] font-light text-[#f0ede8]/85">
+                  <span className="font-sans text-[15px] sm:text-[16px] font-normal text-[#f0ede8]/90">
                     Bengaluru, India · Available Worldwide
                   </span>
                 </div>
@@ -1716,8 +1707,8 @@ export default function App() {
           >
             <div className="flex items-center justify-between p-4 px-6 border-b border-white/10">
               <div>
-                <h3 className="font-serif-garamond text-2xl text-[#f0ede8]">
-                  {selectedVideoModal.title} {selectedVideoModal.highlight && <span className="italic">{selectedVideoModal.highlight}</span>}
+                <h3 className="font-serif-heading text-2xl text-[#f0ede8] font-normal">
+                  {selectedVideoModal.title} {selectedVideoModal.highlight && <span className="opacity-70 font-sans text-sm ml-1.5 font-normal">· {selectedVideoModal.highlight}</span>}
                 </h3>
               </div>
               <div className="flex items-center gap-2">
@@ -1786,7 +1777,7 @@ export default function App() {
                   <div className="w-14 h-14 rounded-full bg-black/60 border border-white/20 mx-auto flex items-center justify-center text-amber-400">
                     <Film className="w-6 h-6" />
                   </div>
-                  <h4 className="font-serif-garamond text-2xl text-white">
+                  <h4 className="font-serif-heading text-2xl text-white font-normal">
                     {selectedVideoModal.title}
                   </h4>
                   <p className="text-xs text-white/60 leading-relaxed max-w-sm mx-auto">
@@ -1822,10 +1813,10 @@ export default function App() {
           >
             <div className="flex items-start justify-between pb-4 mb-6 border-b border-white/10">
               <div>
-                <span className="text-[10px] font-light tracking-[0.2em] uppercase text-white/40 block mb-1">
+                <span className="font-sans text-[11px] font-normal tracking-[0.16em] uppercase text-white/50 block mb-1">
                   Commission Inquiry
                 </span>
-                <h3 className="font-serif-garamond text-2xl md:text-3xl text-[#f0ede8]">
+                <h3 className="font-serif-heading text-2xl md:text-3xl text-[#f0ede8] font-normal">
                   Start a Project with Sriram
                 </h3>
               </div>
@@ -1842,7 +1833,7 @@ export default function App() {
                 <div className="w-12 h-12 mx-auto rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
                   <Check className="w-6 h-6" />
                 </div>
-                <h4 className="font-serif-garamond text-2xl text-white">Inquiry Formatted!</h4>
+                <h4 className="font-serif-heading text-2xl text-white font-normal">Inquiry Formatted!</h4>
                 <p className="text-xs text-white/60 max-w-sm mx-auto leading-relaxed">
                   Your email client has been prepared with your inquiry details. Sriram will reply directly to <span className="text-white">{inquiryForm.email}</span>.
                 </p>
@@ -1967,7 +1958,7 @@ export default function App() {
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-amber-400" />
-                <h3 className="font-serif-garamond text-2xl text-[#f0ede8]">Edit About Me &amp; Bio</h3>
+                <h3 className="font-serif-heading text-2xl text-[#f0ede8] font-normal">Edit About Me &amp; Bio</h3>
               </div>
               <button 
                 onClick={() => setIsEditingAbout(false)}

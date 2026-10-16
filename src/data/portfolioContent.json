@@ -1,16 +1,14 @@
 {
   "hero": "/sriram-hero.jpg",
-  "heroFocus": "face",
+  "heroFocus": "cinematic",
   "portrait": "/sriram-portrait.jpg",
   "about": {
     "headline": "I build visual stories from the first idea to the final frame.",
     "subtitle": "FILMMAKER / CINEMATOGRAPHER / CREATIVE PRODUCER",
     "paragraphs": [
-      "I'm a filmmaker, cinematographer and creative producer with over 7 years of experience developing and producing visual stories for brands, businesses and people.",
-      "My work spans commercials, brand films, documentaries, product films, events and photography. I approach every project through the lens of storytelling, combining creative direction, visual craft and practical production thinking.",
-      "From shaping an initial concept and planning the shoot to working with teams on set and refining the final edit, I enjoy being involved in the complete creative process.",
-      "Whether it's a large-scale production or a focused visual project, my goal is to create work that is purposeful, cinematic and connected to the audience.",
-      "I collaborate with brands, agencies and creative teams to develop ideas into meaningful visual experiences."
+      "I'm a cinematographer, photographer, creative director and creative producer with over 7 years of experience crafting visual stories for brands, businesses and audiences worldwide.",
+      "My work spans commercial TVCs, brand films, documentaries, product films, arena events and editorial photography. I approach each project through narrative depth—uniting creative direction, visual craft and rigorous on-set production.",
+      "From shaping the initial concept and lighting the frame to camera operation and final DaVinci Resolve color grading, I guide projects from first idea to the final frame to deliver purposeful, cinematic work."
     ],
     "stats": [
       {

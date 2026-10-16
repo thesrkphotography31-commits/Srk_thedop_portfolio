@@ -16,10 +16,10 @@
   }
 
   body {
-    background-color: #0d0c0a;
-    color: #f2ede4;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-weight: 300;
+    background-color: #0e0e0e;
+    color: #f0ede8;
+    font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 350;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -30,12 +30,21 @@
   }
 }
 
-.font-serif-garamond {
-  font-family: 'EB Garamond', Georgia, serif;
+.font-serif-newsreader,
+.font-serif-garamond,
+.font-serif-heading {
+  font-family: 'Newsreader', Georgia, Cambria, 'Times New Roman', serif;
+  font-optical-sizing: auto;
 }
 
+.font-serif-cinzel,
 .font-cinzel {
   font-family: 'Cinzel', Georgia, serif;
+}
+
+.font-sans,
+.font-sans-body {
+  font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 /* Matte Gold Utility Classes */
